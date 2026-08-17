@@ -10,8 +10,11 @@
     "plugin-client.js",
     "cordis.patch.yml",
     "README.md",
+    "README.en.md",
     "CHANGELOG.md",
+    "CHANGELOG.en.md",
     "PUBLISHING.md",
+    "PUBLISHING.en.md",
     "LICENSE"
   ],
   "exports": {

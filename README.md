@@ -1,8 +1,8 @@
 # zzy-dsh-prompt-optimizer
 
-DeepSeek Harness（DSH）的预览优先提示词优化插件。插件在对话输入框增加“提示词优化”操作：将草稿发送到你选择的 DSH 模型路由，先展示优化预览，只有在你确认应用后才会修改输入框内容。
+[中文](README.md) | [English](README.en.md)
 
-> English summary: A preview-first prompt optimizer for DeepSeek Harness. It only replaces a draft after you review and apply the generated preview.
+DeepSeek Harness（DSH）的预览优先提示词优化插件。插件在对话输入框增加“提示词优化”操作：将草稿发送到你选择的 DSH 模型路由，先展示优化预览，只有在你确认应用后才会修改输入框内容。
 
 ## 功能
 
@@ -14,23 +14,17 @@ DeepSeek Harness（DSH）的预览优先提示词优化插件。插件在对话�
 - 主模型、回退模型、超时和最大输出 token 设置。
 - 不存储 API Key。
 
-> English summary: Supports explicit modes, preview/apply/cancel/undo, optional session memory and budgeted context, model routing controls, and never stores API keys.
-
 ## 优化模式
 
-- **保真优化（Faithful）**：提升表达清晰度，但不虚构需求、事实、架构或范围。
-- **开发化表达（Developer）**：将用户已经提供的开发信息整理成更适合实现的表述，不替你选择技术栈或设计方案。
-- **规格扩展（Specification）**：允许补充必要默认项，但必须在 `## Default assumptions` 下明确标示，供你审阅。
-
-> English summary: Faithful preserves meaning; Developer structures stated engineering facts; Specification may add defaults but labels them for review.
+- **保真优化**：提升表达清晰度，但不虚构需求、事实、架构或范围。
+- **开发化表达**：将用户已经提供的开发信息整理成更适合实现的表述，不替你选择技术栈或设计方案。
+- **规格扩展**：允许补充必要默认项，但必须在 `## Default assumptions` 下明确标示，供你审阅。
 
 ## 隐私与上下文
 
 当前草稿会发送给你选择的 DSH 模型路由。所有额外上下文默认关闭。
 
 启用会话上下文后，插件只读取当前会话 Surface 中的 `user/message` 和 `assistant/message` 文本。启用工作区上下文后，插件最多读取当前会话工作区根目录内三个相关 Markdown 文件。两个来源都各自受字符预算限制；服务不可用或读取失败时会自动降级为无该来源上下文。插件不会持久化完整草稿、会话历史或文档内容。
-
-> English summary: Extra context is opt-in, budgeted, and gracefully disabled on failure. Full drafts, session history, and document contents are not persisted.
 
 ## 安装
 
@@ -50,21 +44,15 @@ dsh plugin --profile web add "file:D:\\Project\\zzy-dsh-prompt-enhance\\zzy-dsh-
 
 重启现有 DSH Web 进程并刷新其现有 URL；不要为此插件启动第二个 Web 服务器。
 
-> English summary: Install with `dsh plugin --profile web add`. For local development, rebuild, reinstall the `file:` package, then restart the existing DSH Web process.
-
-## 开发与验证
+## 开发与发布
 
 ```sh
 npm run check
 npm pack --dry-run
 ```
 
-## 发布
+发布说明见 [PUBLISHING.md](PUBLISHING.md)。
 
-GitHub、npm 与 DSH Marketplace 的发布前置条件和检查清单见 [PUBLISHING.md](PUBLISHING.md)。
-
-> English: See [PUBLISHING.md](PUBLISHING.md) for GitHub, npm, and DSH Marketplace publication guidance.
-
-## 许可证 / License
+## 许可证
 
 MIT
