@@ -14,6 +14,10 @@ A preview-first prompt optimizer for DeepSeek Harness (DSH). It adds a prompt-op
 - Primary and fallback model routes, timeout, and output-token controls.
 - No API keys are stored by the plugin.
 
+## Prompt Configuration
+
+Host mode prompts live in `src/host/prompt/`: `faithful.js`, `developer.js`, and `specification.js`. The faithful configuration explicitly forbids added confirmation requests, prerequisites, warnings, conditional statements, and unstated assumptions. References to images, attachments, and documents are preserved without assessing their availability or clarity.
+
 ## Modes
 
 - **Faithful** improves clarity without inventing requirements, facts, architecture, or scope.

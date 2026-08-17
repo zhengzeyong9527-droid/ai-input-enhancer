@@ -10,6 +10,8 @@ test('generated host entry loads and exposes a Cordis plugin', () => {
   assert.equal(plugin.name, 'zzy-dsh-prompt-optimizer');
   assert.deepEqual(plugin.inject, ['webServer', 'timer']);
   assert.equal(typeof plugin.apply, 'function');
+  const prompt = require('../lib/prompt/index.js');
+  assert.match(prompt.systemPromptForMode('faithful'), /Do not add clarification questions/);
 });
 
 test('generated client entry registers the expected browser module', () => {
