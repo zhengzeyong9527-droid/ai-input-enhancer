@@ -2,6 +2,7 @@
 
 const RPC_PATH = '/zzy-dsh-prompt-optimizer/rpc';
 const CONFIG_KEY = 'zzy-dsh-prompt-optimizer/config-v1';
+const MAGIC_ICON_SRC = '__MAGIC_ICON_DATA_URL__';
 const stateBySession = new Map();
 const DEFAULT_CONFIG = { useDefaultModel: true, primary: { provider: '', model: '' }, fallback: { provider: '', model: '' }, timeoutMs: 30000, maxTokens: 1800, mode: 'faithful', memory: false, conversationContext: false, contextBudgetChars: 2000, workspaceDocuments: false, documentBudgetChars: 2000 };
 
@@ -160,7 +161,7 @@ function OptimizerAction(props) {
     disabled,
     onClick: () => startOptimization(props, sessionId, state),
     title: disabled ? 'Enter an editable prompt first' : 'Optimize the current prompt'
-  }, '提示词优化');
+  }, React.createElement('img', { className: 'zzy-prompt-optimizer__icon', src: MAGIC_ICON_SRC, alt: '', 'aria-hidden': 'true' }), React.createElement('span', null, '提示词优化'));
 }
 
 function OptimizerDock(props) {
@@ -287,6 +288,7 @@ function insertStyles() {
     .zzy-prompt-optimizer__button:focus-visible, .zzy-prompt-optimizer__text-button:focus-visible, .zzy-prompt-optimizer__apply:focus-visible { outline: 2px solid var(--dsh-accent, #2563eb); outline-offset: 2px; }
     .zzy-prompt-optimizer__button:disabled { cursor: not-allowed; opacity: 0.45; }
     .zzy-prompt-optimizer__button--busy { display: inline-flex; align-items: center; gap: 6px; color: var(--dsh-accent, #2563eb); }
+    .zzy-prompt-optimizer__icon { width: 16px; height: 16px; flex: 0 0 16px; object-fit: contain; }
     .zzy-prompt-optimizer__spinner { width: 12px; height: 12px; box-sizing: border-box; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: zzy-prompt-optimizer-spin 0.75s linear infinite; }
     @keyframes zzy-prompt-optimizer-spin { to { transform: rotate(360deg); } }
     .zzy-prompt-optimizer__dock { display: grid; gap: 8px; max-width: 760px; margin: 0 auto; padding: 10px 12px; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 6px; background: var(--dsh-surface, #ffffff); color: var(--dsh-text, #1e293b); font-size: 13px; }
