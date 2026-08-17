@@ -92,13 +92,15 @@ function startOptimization(props, sessionId, state) {
   callHost('enhance', { sessionId, seq, text: draft, mode: config.mode, config, memory: config.memory ? state.memoryRounds : [] }).then((response) => {
     if (seq !== state.seq) return;
     if (response && response.ok === true && typeof response.text === 'string' && response.text.trim() !== '') {
-      if (props.input.draft !== state.backup) {
+      if (props.input.draft !== state.backup || !props.inputActions || typeof props.inputActions.setDraft !== 'function') {
         state.phase = 'idle';
         state.candidate = '';
       } else {
-        state.phase = 'preview';
+        props.inputActions.setDraft(response.text);
         state.candidate = response.text;
         state.context = Array.isArray(response.context) ? response.context : [];
+        if (config.memory) state.memoryRounds = [...state.memoryRounds, { input: state.backup, output: response.text }].slice(-3);
+        state.phase = 'applied';
       }
     } else {
       state.phase = 'error';
@@ -124,14 +126,6 @@ function cancelOptimization(sessionId, state) {
   callHost('cancel', { sessionId, seq }).catch(() => {});
 }
 
-function applyCandidate(props, sessionId, state) {
-  if (!state.candidate || !props.inputActions || typeof props.inputActions.setDraft !== 'function') return;
-  props.inputActions.setDraft(state.candidate);
-  if (loadConfig().memory) state.memoryRounds = [...state.memoryRounds, { input: state.backup, output: state.candidate }].slice(-3);
-  state.phase = 'applied';
-  notify(sessionId);
-}
-
 function undoCandidate(props, sessionId, state) {
   if (!props.inputActions || typeof props.inputActions.setDraft !== 'function') return;
   props.inputActions.setDraft(state.backup);
@@ -155,7 +149,10 @@ function OptimizerAction(props) {
   const draft = props.input && typeof props.input.draft === 'string' ? props.input.draft : '';
   const disabled = draft.trim() === '' || !isEditable(props.input);
   if (state.phase === 'enhancing') {
-    return React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__button zzy-prompt-optimizer__button--busy', onClick: () => cancelOptimization(sessionId, state), title: 'Cancel prompt optimization' }, '取消优化');
+    return React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__button zzy-prompt-optimizer__button--busy', onClick: () => cancelOptimization(sessionId, state), title: 'Cancel prompt optimization', 'aria-live': 'polite' },
+      React.createElement('span', { className: 'zzy-prompt-optimizer__spinner', 'aria-hidden': 'true' }),
+      React.createElement('span', null, '取消优化')
+    );
   }
   return React.createElement('button', {
     type: 'button',
@@ -184,23 +181,13 @@ function OptimizerDock(props) {
 
   if (state.phase === 'applied') {
     return React.createElement('div', { className: 'zzy-prompt-optimizer__dock', role: 'status' },
-      React.createElement('span', null, '已应用优化稿。'),
+      React.createElement('span', null, '已填入优化稿。'),
+      state.context.length > 0 ? React.createElement('span', { className: 'zzy-prompt-optimizer__settings-note' }, '已使用：' + state.context.map((item) => item.kind + ' ' + item.chars + ' 字符').join('，')) : null,
       React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__text-button', onClick: () => undoCandidate(props, sessionId, state) }, '撤回')
     );
   }
 
-  return React.createElement('section', { className: 'zzy-prompt-optimizer__dock', 'aria-label': 'Prompt optimization preview' },
-    React.createElement('div', { className: 'zzy-prompt-optimizer__dock-header' },
-      React.createElement('strong', null, '优化预览'),
-      React.createElement('span', null, loadConfig().mode === 'specification' ? '请检查 Default assumptions 后应用' : '请确认后应用')
-    ),
-    state.context.length > 0 ? React.createElement('div', { className: 'zzy-prompt-optimizer__settings-note' }, '本次已使用：' + state.context.map((item) => item.kind + ' ' + item.chars + ' 字符').join('，')) : null,
-    React.createElement('textarea', { className: 'zzy-prompt-optimizer__preview', value: state.candidate, readOnly: true, rows: 7 }),
-    React.createElement('div', { className: 'zzy-prompt-optimizer__dock-actions' },
-      React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__apply', onClick: () => applyCandidate(props, sessionId, state) }, '应用优化稿'),
-      React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__text-button', onClick: () => dismiss(sessionId, state) }, '保留原稿')
-    )
-  );
+  return null;
 }
 
 function OptimizerSettings() {
@@ -299,12 +286,11 @@ function insertStyles() {
     .zzy-prompt-optimizer__button:hover:not(:disabled), .zzy-prompt-optimizer__text-button:hover { border-color: var(--dsh-accent, #2563eb); color: var(--dsh-accent, #2563eb); }
     .zzy-prompt-optimizer__button:focus-visible, .zzy-prompt-optimizer__text-button:focus-visible, .zzy-prompt-optimizer__apply:focus-visible { outline: 2px solid var(--dsh-accent, #2563eb); outline-offset: 2px; }
     .zzy-prompt-optimizer__button:disabled { cursor: not-allowed; opacity: 0.45; }
-    .zzy-prompt-optimizer__button--busy { color: var(--dsh-accent, #2563eb); }
+    .zzy-prompt-optimizer__button--busy { display: inline-flex; align-items: center; gap: 6px; color: var(--dsh-accent, #2563eb); }
+    .zzy-prompt-optimizer__spinner { width: 12px; height: 12px; box-sizing: border-box; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: zzy-prompt-optimizer-spin 0.75s linear infinite; }
+    @keyframes zzy-prompt-optimizer-spin { to { transform: rotate(360deg); } }
     .zzy-prompt-optimizer__dock { display: grid; gap: 8px; max-width: 760px; margin: 0 auto; padding: 10px 12px; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 6px; background: var(--dsh-surface, #ffffff); color: var(--dsh-text, #1e293b); font-size: 13px; }
     .zzy-prompt-optimizer__dock--error { grid-template-columns: 1fr auto; border-color: #dc2626; color: #991b1b; }
-    .zzy-prompt-optimizer__dock-header, .zzy-prompt-optimizer__dock-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .zzy-prompt-optimizer__dock-header span { color: var(--dsh-muted, #64748b); font-size: 12px; }
-    .zzy-prompt-optimizer__preview { width: 100%; min-height: 126px; resize: vertical; box-sizing: border-box; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 4px; background: transparent; color: inherit; padding: 8px; font: inherit; line-height: 1.45; }
     .zzy-prompt-optimizer__apply, .zzy-prompt-optimizer__text-button { min-height: 28px; border-radius: 4px; font: inherit; font-size: 12px; letter-spacing: 0; cursor: pointer; }
     .zzy-prompt-optimizer__apply { padding: 0 9px; border: 1px solid var(--dsh-accent, #2563eb); background: var(--dsh-accent, #2563eb); color: #ffffff; }
     .zzy-prompt-optimizer__text-button { padding: 0 4px; border: 0; background: transparent; color: var(--dsh-text, #1e293b); }
