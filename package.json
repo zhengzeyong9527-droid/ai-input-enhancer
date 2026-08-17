@@ -1,0 +1,57 @@
+{
+  "name": "zzy-dsh-prompt-optimizer",
+  "version": "0.1.0",
+  "description": "Preview-first, privacy-aware prompt optimization for DeepSeek Harness.",
+  "main": "lib/index.cjs",
+  "type": "commonjs",
+  "files": [
+    "lib",
+    "plugin-host.js",
+    "plugin-client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "PUBLISHING.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./lib/index.cjs",
+    "./client": "./lib/client.cjs",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build:host": "node scripts/build-host.mjs",
+    "build:client": "node scripts/build-client.mjs",
+    "build": "npm run build:host && npm run build:client",
+    "test": "node --test test/*.test.cjs",
+    "check": "npm run build && npm test",
+    "prepack": "npm run check"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "prompt-optimizer"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer.git"
+  }
+}

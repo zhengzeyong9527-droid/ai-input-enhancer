@@ -1,0 +1,4 @@
+# Adds the zzy prompt optimizer layer to a DSH profile.
+- insert:
+    - id: zzy-dsh-prompt-optimizer
+      name: zzy-dsh-prompt-optimizer

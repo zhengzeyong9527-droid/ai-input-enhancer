@@ -1,0 +1,339 @@
+'use strict';
+
+const RPC_PATH = '/zzy-dsh-prompt-optimizer/rpc';
+const CONFIG_KEY = 'zzy-dsh-prompt-optimizer/config-v1';
+const stateBySession = new Map();
+const DEFAULT_CONFIG = { useDefaultModel: true, primary: { provider: '', model: '' }, fallback: { provider: '', model: '' }, timeoutMs: 30000, maxTokens: 1800, mode: 'faithful', memory: false, conversationContext: false, contextBudgetChars: 2000, workspaceDocuments: false, documentBudgetChars: 2000 };
+
+function cloneConfig(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function loadConfig() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CONFIG_KEY) || 'null');
+    if (!saved || typeof saved !== 'object') return cloneConfig(DEFAULT_CONFIG);
+    return {
+      useDefaultModel: saved.useDefaultModel !== false,
+      primary: { provider: typeof saved.primary?.provider === 'string' ? saved.primary.provider : '', model: typeof saved.primary?.model === 'string' ? saved.primary.model : '' },
+      fallback: { provider: typeof saved.fallback?.provider === 'string' ? saved.fallback.provider : '', model: typeof saved.fallback?.model === 'string' ? saved.fallback.model : '' },
+      timeoutMs: Number.isInteger(saved.timeoutMs) ? saved.timeoutMs : DEFAULT_CONFIG.timeoutMs,
+      maxTokens: Number.isInteger(saved.maxTokens) ? saved.maxTokens : DEFAULT_CONFIG.maxTokens,
+      mode: ['faithful', 'developer', 'specification'].includes(saved.mode) ? saved.mode : DEFAULT_CONFIG.mode,
+      memory: saved.memory === true,
+      conversationContext: saved.conversationContext === true,
+      contextBudgetChars: Number.isInteger(saved.contextBudgetChars) ? saved.contextBudgetChars : DEFAULT_CONFIG.contextBudgetChars,
+      workspaceDocuments: saved.workspaceDocuments === true,
+      documentBudgetChars: Number.isInteger(saved.documentBudgetChars) ? saved.documentBudgetChars : DEFAULT_CONFIG.documentBudgetChars
+    };
+  } catch { return cloneConfig(DEFAULT_CONFIG); }
+}
+
+function saveConfig(config) {
+  localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+}
+
+function callHost(method, args) {
+  return fetch(RPC_PATH, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ method, args: args || {} })
+  }).then((response) => response.json());
+}
+
+function sessionIdOf(props) {
+  if (typeof props.sessionId === 'string') return props.sessionId;
+  return props.session && typeof props.session.sessionId === 'string' ? props.session.sessionId : '';
+}
+
+function storeFor(sessionId) {
+  let state = stateBySession.get(sessionId);
+  if (!state) {
+    state = { phase: 'idle', seq: 0, backup: '', candidate: '', error: '', context: [], memoryRounds: [], listeners: new Set() };
+    stateBySession.set(sessionId, state);
+  }
+  return state;
+}
+
+function notify(sessionId) {
+  const state = storeFor(sessionId);
+  for (const listener of [...state.listeners]) listener();
+}
+
+function useOptimizerState(sessionId) {
+  const [, render] = React.useState(0);
+  React.useEffect(() => {
+    if (!sessionId) return undefined;
+    const state = storeFor(sessionId);
+    const listener = () => render((value) => value + 1);
+    state.listeners.add(listener);
+    return () => state.listeners.delete(listener);
+  }, [sessionId]);
+  return sessionId ? storeFor(sessionId) : null;
+}
+
+function isEditable(input) {
+  return input && input.phase === 'plain';
+}
+
+function startOptimization(props, sessionId, state) {
+  const draft = props.input && typeof props.input.draft === 'string' ? props.input.draft : '';
+  if (!isEditable(props.input) || draft.trim() === '') return;
+
+  state.seq += 1;
+  const seq = state.seq;
+  state.phase = 'enhancing';
+  state.backup = draft;
+  state.candidate = '';
+  state.error = '';
+  notify(sessionId);
+
+  const config = loadConfig();
+  callHost('enhance', { sessionId, seq, text: draft, mode: config.mode, config, memory: config.memory ? state.memoryRounds : [] }).then((response) => {
+    if (seq !== state.seq) return;
+    if (response && response.ok === true && typeof response.text === 'string' && response.text.trim() !== '') {
+      if (props.input.draft !== state.backup) {
+        state.phase = 'idle';
+        state.candidate = '';
+      } else {
+        state.phase = 'preview';
+        state.candidate = response.text;
+        state.context = Array.isArray(response.context) ? response.context : [];
+      }
+    } else {
+      state.phase = 'error';
+      state.error = response && typeof response.message === 'string' ? response.message : 'Optimization failed.';
+    }
+    notify(sessionId);
+  }).catch(() => {
+    if (seq !== state.seq) return;
+    state.phase = 'error';
+    state.error = 'The optimization request could not reach DSH.';
+    notify(sessionId);
+  });
+}
+
+function cancelOptimization(sessionId, state) {
+  if (state.phase !== 'enhancing') return;
+  const seq = state.seq;
+  state.seq += 1;
+  state.phase = 'idle';
+  state.candidate = '';
+  state.error = '';
+  notify(sessionId);
+  callHost('cancel', { sessionId, seq }).catch(() => {});
+}
+
+function applyCandidate(props, sessionId, state) {
+  if (!state.candidate || !props.inputActions || typeof props.inputActions.setDraft !== 'function') return;
+  props.inputActions.setDraft(state.candidate);
+  if (loadConfig().memory) state.memoryRounds = [...state.memoryRounds, { input: state.backup, output: state.candidate }].slice(-3);
+  state.phase = 'applied';
+  notify(sessionId);
+}
+
+function undoCandidate(props, sessionId, state) {
+  if (!props.inputActions || typeof props.inputActions.setDraft !== 'function') return;
+  props.inputActions.setDraft(state.backup);
+  state.phase = 'idle';
+  state.candidate = '';
+  state.error = '';
+  notify(sessionId);
+}
+
+function dismiss(sessionId, state) {
+  state.phase = 'idle';
+  state.candidate = '';
+  state.error = '';
+  notify(sessionId);
+}
+
+function OptimizerAction(props) {
+  const sessionId = sessionIdOf(props);
+  const state = useOptimizerState(sessionId);
+  if (!sessionId || !state) return null;
+  const draft = props.input && typeof props.input.draft === 'string' ? props.input.draft : '';
+  const disabled = draft.trim() === '' || !isEditable(props.input);
+  if (state.phase === 'enhancing') {
+    return React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__button zzy-prompt-optimizer__button--busy', onClick: () => cancelOptimization(sessionId, state), title: 'Cancel prompt optimization' }, '取消优化');
+  }
+  return React.createElement('button', {
+    type: 'button',
+    className: 'zzy-prompt-optimizer__button',
+    disabled,
+    onClick: () => startOptimization(props, sessionId, state),
+    title: disabled ? 'Enter an editable prompt first' : 'Optimize the current prompt'
+  }, '提示词优化');
+}
+
+function OptimizerDock(props) {
+  const sessionId = sessionIdOf(props);
+  const state = useOptimizerState(sessionId);
+  React.useEffect(() => {
+    if (!state || state.phase !== 'applied' || !props.input || props.input.draft === state.candidate) return;
+    dismiss(sessionId, state);
+  }, [props.input && props.input.draft, sessionId, state]);
+  if (!sessionId || !state || state.phase === 'idle' || state.phase === 'enhancing') return null;
+
+  if (state.phase === 'error') {
+    return React.createElement('div', { className: 'zzy-prompt-optimizer__dock zzy-prompt-optimizer__dock--error', role: 'status' },
+      React.createElement('span', null, state.error),
+      React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__text-button', onClick: () => dismiss(sessionId, state) }, '关闭')
+    );
+  }
+
+  if (state.phase === 'applied') {
+    return React.createElement('div', { className: 'zzy-prompt-optimizer__dock', role: 'status' },
+      React.createElement('span', null, '已应用优化稿。'),
+      React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__text-button', onClick: () => undoCandidate(props, sessionId, state) }, '撤回')
+    );
+  }
+
+  return React.createElement('section', { className: 'zzy-prompt-optimizer__dock', 'aria-label': 'Prompt optimization preview' },
+    React.createElement('div', { className: 'zzy-prompt-optimizer__dock-header' },
+      React.createElement('strong', null, '优化预览'),
+      React.createElement('span', null, loadConfig().mode === 'specification' ? '请检查 Default assumptions 后应用' : '请确认后应用')
+    ),
+    state.context.length > 0 ? React.createElement('div', { className: 'zzy-prompt-optimizer__settings-note' }, '本次已使用：' + state.context.map((item) => item.kind + ' ' + item.chars + ' 字符').join('，')) : null,
+    React.createElement('textarea', { className: 'zzy-prompt-optimizer__preview', value: state.candidate, readOnly: true, rows: 7 }),
+    React.createElement('div', { className: 'zzy-prompt-optimizer__dock-actions' },
+      React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__apply', onClick: () => applyCandidate(props, sessionId, state) }, '应用优化稿'),
+      React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__text-button', onClick: () => dismiss(sessionId, state) }, '保留原稿')
+    )
+  );
+}
+
+function OptimizerSettings() {
+  const [config, setConfig] = React.useState(() => loadConfig());
+  const [directory, setDirectory] = React.useState(null);
+  const [testState, setTestState] = React.useState('');
+
+  React.useEffect(() => {
+    callHost('models/list').then((result) => setDirectory(result && result.ok ? result : null)).catch(() => setDirectory(null));
+  }, []);
+
+  const update = (path, value) => {
+    const next = cloneConfig(config);
+    if (path.indexOf('.') >= 0) {
+      const [group, field] = path.split('.');
+      next[group][field] = value;
+    } else {
+      next[path] = value;
+    }
+    setConfig(next);
+    saveConfig(next);
+  };
+
+  const testModel = () => {
+    setTestState('正在测试模型...');
+    callHost('models/test', { config }).then((result) => {
+      setTestState(result && result.ok ? '连接成功：' + result.model : (result && result.message) || '模型测试失败。');
+    }).catch(() => setTestState('模型测试请求失败。'));
+  };
+
+  const defaultText = directory && directory.defaultModel ? directory.defaultModel.provider + ' / ' + directory.defaultModel.model : '未检测到当前默认模型';
+  return React.createElement('section', { className: 'zzy-prompt-optimizer__settings' },
+    React.createElement('div', null,
+      React.createElement('h2', null, '提示词优化'),
+      React.createElement('p', null, '模型凭据始终由 DSH 管理。此处仅保存本浏览器的路由、超时和输出限制。')
+    ),
+    React.createElement('label', { className: 'zzy-prompt-optimizer__field' },
+      React.createElement('span', null, '模型来源'),
+      React.createElement('label', null,
+        React.createElement('input', { type: 'checkbox', checked: config.useDefaultModel, onChange: (event) => update('useDefaultModel', event.target.checked) }),
+        ' 使用 DSH 当前默认模型（' + defaultText + ')'
+      )
+    ),
+    React.createElement('div', { className: 'zzy-prompt-optimizer__field-grid' },
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' },
+        React.createElement('span', null, '优化模式'),
+        React.createElement('select', { value: config.mode, onChange: (event) => update('mode', event.target.value) },
+          React.createElement('option', { value: 'faithful' }, '保真优化'),
+          React.createElement('option', { value: 'developer' }, '开发化表达'),
+          React.createElement('option', { value: 'specification' }, '规格扩展（含默认假设）')
+        )
+      ),
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' },
+        React.createElement('span', null, '连续优化'),
+        React.createElement('label', null, React.createElement('input', { type: 'checkbox', checked: config.memory, onChange: (event) => update('memory', event.target.checked) }), ' 在本次发送前保留已应用的最多三轮优化')
+      )
+    ),
+    React.createElement('div', { className: 'zzy-prompt-optimizer__field-grid' },
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '当前会话上下文'), React.createElement('label', null, React.createElement('input', { type: 'checkbox', checked: config.conversationContext, onChange: (event) => update('conversationContext', event.target.checked) }), ' 允许优化时读取当前会话的有限文本摘要')),
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '会话上下文预算（字符）'), React.createElement('input', { type: 'number', min: 500, max: 4000, disabled: !config.conversationContext, value: config.contextBudgetChars, onChange: (event) => update('contextBudgetChars', Number(event.target.value)) }))
+    ),
+    config.conversationContext ? React.createElement('p', null, '仅读取当前会话的 user/assistant 文本；工具结果不会被读取。') : null,
+    React.createElement('div', { className: 'zzy-prompt-optimizer__field-grid' },
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '工作区文档上下文'), React.createElement('label', null, React.createElement('input', { type: 'checkbox', checked: config.workspaceDocuments, onChange: (event) => update('workspaceDocuments', event.target.checked) }), ' 允许读取当前工作区根目录的有限 Markdown 文档')),
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '文档预算（字符）'), React.createElement('input', { type: 'number', min: 500, max: 4000, disabled: !config.workspaceDocuments, value: config.documentBudgetChars, onChange: (event) => update('documentBudgetChars', Number(event.target.value)) }))
+    ),
+    config.workspaceDocuments ? React.createElement('p', null, '仅检查工作区根目录的最多 3 个相关 Markdown 文件，并在预览中显示实际使用情况。') : null,
+    config.mode === 'specification' ? React.createElement('p', null, '规格扩展允许补充内容，但优化稿会以“## Default assumptions”标出每项默认假设。') : null,
+    !config.useDefaultModel ? React.createElement('div', { className: 'zzy-prompt-optimizer__field-grid' },
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '主 Provider'), React.createElement('input', { value: config.primary.provider, onChange: (event) => update('primary.provider', event.target.value), placeholder: 'provider route' })),
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '主模型 ID'), React.createElement('input', { value: config.primary.model, onChange: (event) => update('primary.model', event.target.value), placeholder: 'model id' }))
+    ) : null,
+    React.createElement('div', { className: 'zzy-prompt-optimizer__field-grid' },
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '回退 Provider（可选）'), React.createElement('input', { value: config.fallback.provider, onChange: (event) => update('fallback.provider', event.target.value), placeholder: 'provider route' })),
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '回退模型 ID（可选）'), React.createElement('input', { value: config.fallback.model, onChange: (event) => update('fallback.model', event.target.value), placeholder: 'model id' })),
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '超时（毫秒）'), React.createElement('input', { type: 'number', min: 5000, max: 120000, value: config.timeoutMs, onChange: (event) => update('timeoutMs', Number(event.target.value)) })),
+      React.createElement('label', { className: 'zzy-prompt-optimizer__field' }, React.createElement('span', null, '最大输出 token'), React.createElement('input', { type: 'number', min: 100, max: 4000, value: config.maxTokens, onChange: (event) => update('maxTokens', Number(event.target.value)) }))
+    ),
+    React.createElement('div', { className: 'zzy-prompt-optimizer__settings-actions' },
+      React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__apply', onClick: testModel }, '测试模型连接'),
+      React.createElement('span', { className: 'zzy-prompt-optimizer__settings-note' }, testState)
+    ),
+    directory && directory.providers && directory.providers.length > 0 ? React.createElement('p', null, '当前 DSH Provider：' + directory.providers.map((provider) => provider.id).join('、')) : null
+  );
+}
+
+function insertStyles() {
+  if (document.querySelector('style[data-plugin-css="zzy-dsh-prompt-optimizer"]')) return;
+  const tag = document.createElement('style');
+  tag.dataset.pluginCss = 'zzy-dsh-prompt-optimizer';
+  tag.textContent = `
+    .zzy-prompt-optimizer__button { min-height: 28px; padding: 0 9px; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 6px; background: var(--dsh-surface, #ffffff); color: var(--dsh-text, #1e293b); font: inherit; font-size: 12px; letter-spacing: 0; cursor: pointer; white-space: nowrap; }
+    .zzy-prompt-optimizer__button:hover:not(:disabled), .zzy-prompt-optimizer__text-button:hover { border-color: var(--dsh-accent, #2563eb); color: var(--dsh-accent, #2563eb); }
+    .zzy-prompt-optimizer__button:focus-visible, .zzy-prompt-optimizer__text-button:focus-visible, .zzy-prompt-optimizer__apply:focus-visible { outline: 2px solid var(--dsh-accent, #2563eb); outline-offset: 2px; }
+    .zzy-prompt-optimizer__button:disabled { cursor: not-allowed; opacity: 0.45; }
+    .zzy-prompt-optimizer__button--busy { color: var(--dsh-accent, #2563eb); }
+    .zzy-prompt-optimizer__dock { display: grid; gap: 8px; max-width: 760px; margin: 0 auto; padding: 10px 12px; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 6px; background: var(--dsh-surface, #ffffff); color: var(--dsh-text, #1e293b); font-size: 13px; }
+    .zzy-prompt-optimizer__dock--error { grid-template-columns: 1fr auto; border-color: #dc2626; color: #991b1b; }
+    .zzy-prompt-optimizer__dock-header, .zzy-prompt-optimizer__dock-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .zzy-prompt-optimizer__dock-header span { color: var(--dsh-muted, #64748b); font-size: 12px; }
+    .zzy-prompt-optimizer__preview { width: 100%; min-height: 126px; resize: vertical; box-sizing: border-box; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 4px; background: transparent; color: inherit; padding: 8px; font: inherit; line-height: 1.45; }
+    .zzy-prompt-optimizer__apply, .zzy-prompt-optimizer__text-button { min-height: 28px; border-radius: 4px; font: inherit; font-size: 12px; letter-spacing: 0; cursor: pointer; }
+    .zzy-prompt-optimizer__apply { padding: 0 9px; border: 1px solid var(--dsh-accent, #2563eb); background: var(--dsh-accent, #2563eb); color: #ffffff; }
+    .zzy-prompt-optimizer__text-button { padding: 0 4px; border: 0; background: transparent; color: var(--dsh-text, #1e293b); }
+    .zzy-prompt-optimizer__settings { display: grid; gap: 16px; max-width: 720px; padding: 8px 0; color: var(--dsh-text, #1e293b); }
+    .zzy-prompt-optimizer__settings h2 { margin: 0; font-size: 16px; }
+    .zzy-prompt-optimizer__settings p { margin: 0; color: var(--dsh-muted, #64748b); font-size: 13px; line-height: 1.5; }
+    .zzy-prompt-optimizer__field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .zzy-prompt-optimizer__field { display: grid; gap: 6px; font-size: 13px; }
+    .zzy-prompt-optimizer__field input, .zzy-prompt-optimizer__field select { min-height: 32px; box-sizing: border-box; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 4px; background: transparent; color: inherit; padding: 0 8px; font: inherit; }
+    .zzy-prompt-optimizer__settings-actions { display: flex; align-items: center; gap: 12px; }
+    .zzy-prompt-optimizer__settings-note { font-size: 12px; color: var(--dsh-muted, #64748b); }
+    @media (max-width: 600px) { .zzy-prompt-optimizer__field-grid { grid-template-columns: 1fr; } }
+  `;
+  document.head.appendChild(tag);
+}
+
+module.exports = {
+  apply(ctx) {
+    const slots = ctx.get('slots');
+    if (!slots) return;
+    insertStyles();
+    ctx.effect(() => slots.inject('conversation.input.right', () => slots.register(
+      { name: 'conversation.input.right', id: 'zzy-prompt-optimizer-action', order: 21, label: '提示词优化' },
+      (props) => React.createElement(OptimizerAction, props)
+    )));
+    ctx.effect(() => slots.inject('conversation.input.dock', () => slots.register(
+      { name: 'conversation.input.dock', id: 'zzy-prompt-optimizer-preview', order: 35, label: '提示词优化预览' },
+      (props) => React.createElement(OptimizerDock, props)
+    )));
+    ctx.effect(() => slots.inject('settings.plugins.tab', () => slots.register(
+      { name: 'settings.plugins.tab', id: 'zzy-prompt-optimizer', order: 20, label: '提示词优化' },
+      () => React.createElement(OptimizerSettings)
+    )));
+  }
+};
