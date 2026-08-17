@@ -20,4 +20,9 @@ test('generated client entry registers the expected browser module', () => {
   assert.match(body, /zzy-dsh-prompt-optimizer/);
   assert.match(body, /conversation\.input\.right/);
   assert.match(body, /conversation\.input\.dock/);
+  assert.match(body, /zzy-prompt-optimizer__spinner/);
+  assert.match(body, /已填入优化稿/);
+  assert.doesNotMatch(body, /Prompt optimization preview/);
+  assert.doesNotMatch(body, /zzy-prompt-optimizer__preview/);
+  assert.doesNotMatch(body, /应用优化稿/);
 });
