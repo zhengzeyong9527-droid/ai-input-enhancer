@@ -21,6 +21,8 @@ test('generated client entry registers the expected browser module', () => {
   assert.match(body, /conversation\.input\.right/);
   assert.match(body, /conversation\.input\.dock/);
   assert.match(body, /zzy-prompt-optimizer__spinner/);
+  assert.match(body, /zzy-prompt-optimizer__icon/);
+  assert.match(body, /data:image\/png;base64,/);
   assert.match(body, /已填入优化稿/);
   assert.doesNotMatch(body, /Prompt optimization preview/);
   assert.doesNotMatch(body, /zzy-prompt-optimizer__preview/);
