@@ -186,6 +186,8 @@ function OptimizerSettings() {
   const [directory, setDirectory] = React.useState(null);
   const [testState, setTestState] = React.useState('');
   const [releaseState, setReleaseState] = React.useState('');
+  const [releaseInfo, setReleaseInfo] = React.useState(null);
+  const [restartReady, setRestartReady] = React.useState(false);
 
   React.useEffect(() => {
     callHost('models/list').then((result) => setDirectory(result && result.ok ? result : null)).catch(() => setDirectory(null));
@@ -213,9 +215,20 @@ function OptimizerSettings() {
   const checkRelease = () => {
     setReleaseState('正在检测版本...');
     callHost('update/check').then((result) => {
-      if (!result || !result.ok) return setReleaseState((result && result.message) || '版本检测失败。');
-      setReleaseState(result.available ? '发现 v' + result.latest + '，一键更新将在下一版设置页提供。' : '当前已是最新版本（v' + result.current + '）。');
+      if (!result || !result.ok) { setReleaseInfo(null); return setReleaseState((result && result.message) || '版本检测失败。'); }
+      setReleaseInfo(result);
+      setReleaseState(result.installation === 'local-development' ? '当前使用本地开发安装，自动更新不可用。' : (result.available ? '发现 v' + result.latest + '。' : '当前已是最新版本（v' + result.current + '）。'));
     }).catch(() => setReleaseState('版本检测请求失败。'));
+  };
+
+  const installRelease = () => {
+    setReleaseState('正在下载并校验更新包...');
+    callHost('update/apply').then((result) => { setRestartReady(!!(result && result.ok)); setReleaseState(result && result.ok ? '更新包已就绪。请点击重启 DSH Web 以完成安装。' : (result && result.message) || '一键更新失败。'); }).catch(() => setReleaseState('一键更新请求失败。'));
+  };
+
+  const restartDsh = () => {
+    setReleaseState('正在安装更新并重启 DSH Web...');
+    callHost('update/restart').then((result) => setReleaseState(result && result.ok ? 'DSH Web 已重启，正在刷新页面。' : (result && result.message) || '重启失败。')).catch(() => setReleaseState('重启请求已中断，请手动重启 DSH Web。'));
   };
 
   const defaultText = directory && directory.defaultModel ? directory.defaultModel.provider + ' / ' + directory.defaultModel.model : '未检测到当前默认模型';
@@ -227,6 +240,8 @@ function OptimizerSettings() {
     React.createElement('section', { className: 'zzy-prompt-optimizer__update' },
       React.createElement('h3', null, '版本检测与更新'),
       React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__button', onClick: checkRelease }, '检测版本'),
+      releaseInfo && releaseInfo.canUpdate ? React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__button', onClick: installRelease }, '一键更新') : null,
+      restartReady ? React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__button', onClick: restartDsh }, '重启 DSH Web') : null,
       releaseState ? React.createElement('p', { className: 'zzy-prompt-optimizer__settings-note' }, releaseState) : null
     ),
     React.createElement('label', { className: 'zzy-prompt-optimizer__field' },
