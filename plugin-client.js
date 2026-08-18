@@ -146,6 +146,10 @@ function dismiss(sessionId, state) {
 function OptimizerAction(props) {
   const sessionId = sessionIdOf(props);
   const state = useOptimizerState(sessionId);
+  React.useEffect(() => {
+    if (!state || state.phase !== 'applied' || !props.input || props.input.draft === state.candidate) return;
+    dismiss(sessionId, state);
+  }, [props.input && props.input.draft, sessionId, state]);
   if (!sessionId || !state) return null;
   const draft = props.input && typeof props.input.draft === 'string' ? props.input.draft : '';
   const disabled = draft.trim() === '' || !isEditable(props.input);
@@ -155,6 +159,9 @@ function OptimizerAction(props) {
       React.createElement('span', null, '取消优化')
     );
   }
+  if (state.phase === 'applied') {
+    return React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__button zzy-prompt-optimizer__button--undo', onClick: () => undoCandidate(props, sessionId, state), title: '撤回到优化前的提示词' }, '已优化，可撤回');
+  }
   return React.createElement('button', {
     type: 'button',
     className: 'zzy-prompt-optimizer__button',
@@ -162,17 +169,6 @@ function OptimizerAction(props) {
     onClick: () => startOptimization(props, sessionId, state),
     title: disabled ? 'Enter an editable prompt first' : 'Optimize the current prompt'
   }, React.createElement('img', { className: 'zzy-prompt-optimizer__icon', src: MAGIC_ICON_SRC, alt: '', 'aria-hidden': 'true' }), React.createElement('span', null, '提示词优化'));
-}
-
-function OptimizerInlineUndo(props) {
-  const sessionId = sessionIdOf(props);
-  const state = useOptimizerState(sessionId);
-  React.useEffect(() => {
-    if (!state || state.phase !== 'applied' || !props.input || props.input.draft === state.candidate) return;
-    dismiss(sessionId, state);
-  }, [props.input && props.input.draft, sessionId, state]);
-  if (!sessionId || !state || state.phase !== 'applied') return null;
-  return React.createElement('button', { type: 'button', className: 'zzy-prompt-optimizer__inline-undo', onClick: () => undoCandidate(props, sessionId, state), title: '撤回到优化前的提示词' }, '已优化，可撤回');
 }
 
 function OptimizerDock(props) {
@@ -285,9 +281,8 @@ function insertStyles() {
     .zzy-prompt-optimizer__icon { width: 16px; height: 16px; flex: 0 0 16px; object-fit: contain; transform: translateY(1px); }
     .zzy-prompt-optimizer__spinner { width: 12px; height: 12px; box-sizing: border-box; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: zzy-prompt-optimizer-spin 0.75s linear infinite; }
     @keyframes zzy-prompt-optimizer-spin { to { transform: rotate(360deg); } }
-    .zzy-prompt-optimizer__inline-undo { min-height: 24px; padding: 0 7px; border: 1px solid #86efac; border-radius: 4px; background: #ecfdf5; color: #15803d; font: inherit; font-size: 12px; letter-spacing: 0; cursor: pointer; }
-    .zzy-prompt-optimizer__inline-undo:hover { border-color: #16a34a; background: #dcfce7; }
-    .zzy-prompt-optimizer__inline-undo:focus-visible { outline: 2px solid #16a34a; outline-offset: 2px; }
+    .zzy-prompt-optimizer__button--undo { border-color: #86efac; background: #ecfdf5; color: #15803d; }
+    .zzy-prompt-optimizer__button--undo:hover { border-color: #16a34a; background: #dcfce7; color: #15803d; }
     .zzy-prompt-optimizer__dock { display: grid; gap: 8px; max-width: 760px; margin: 0 auto; padding: 10px 12px; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 6px; background: var(--dsh-surface, #ffffff); color: var(--dsh-text, #1e293b); font-size: 13px; }
     .zzy-prompt-optimizer__dock--error { grid-template-columns: 1fr auto; border-color: #dc2626; color: #991b1b; }
     .zzy-prompt-optimizer__apply, .zzy-prompt-optimizer__text-button { min-height: 28px; border-radius: 4px; font: inherit; font-size: 12px; letter-spacing: 0; cursor: pointer; }
@@ -314,10 +309,6 @@ module.exports = {
     const slots = ctx.get('slots');
     if (!slots) return;
     insertStyles();
-    ctx.effect(() => slots.inject('conversation.input.left', () => slots.register(
-      { name: 'conversation.input.left', id: 'zzy-prompt-optimizer-undo', order: 30, label: '撤回提示词优化' },
-      (props) => React.createElement(OptimizerInlineUndo, props)
-    )));
     ctx.effect(() => slots.inject('conversation.input.right', () => slots.register(
       { name: 'conversation.input.right', id: 'zzy-prompt-optimizer-action', order: 21, label: '提示词优化' },
       (props) => React.createElement(OptimizerAction, props)
