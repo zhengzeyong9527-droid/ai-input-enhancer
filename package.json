@@ -1,6 +1,6 @@
 {
   "name": "zzy-dsh-prompt-optimizer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Direct-apply, privacy-aware prompt optimization for DeepSeek Harness.",
   "main": "lib/index.cjs",
   "type": "commonjs",
