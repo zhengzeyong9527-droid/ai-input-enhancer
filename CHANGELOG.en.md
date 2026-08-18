@@ -4,6 +4,15 @@
 
 All notable changes to this project are documented here.
 
+## 0.3.0 - 2026-08-18
+
+### Added
+
+- Added GitHub Release version checks, one-click update, and DSH Web restart controls.
+- Added an independent loopback executor that downloads and verifies the fixed official Release tarball SHA-256.
+- Disable automatic updates for local `file:` development installs to protect source directories.
+- Added DSH Web health checks, restart-failure profile declaration recovery, and fixed CLI dependency restoration.
+
 ## 0.2.0 - 2026-08-18
 
 ### Added and Changed
