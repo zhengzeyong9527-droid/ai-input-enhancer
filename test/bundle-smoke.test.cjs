@@ -26,6 +26,11 @@ test('generated client entry registers the expected browser module', () => {
   assert.match(body, /data:image\/png;base64,/);
   assert.match(body, /已优化，可撤回/);
   assert.match(body, /zzy-prompt-optimizer__button--undo/);
+  assert.match(body, /检测版本/);
+  assert.match(body, /一键更新/);
+  assert.match(body, /重启 DSH Web/);
+  assert.match(body, /update\/apply/);
+  assert.match(body, /update\/restart/);
   assert.doesNotMatch(body, /zzy-prompt-optimizer__inline-undo/);
   assert.doesNotMatch(body, /已填入优化稿/);
   assert.doesNotMatch(body, /Prompt optimization preview/);
