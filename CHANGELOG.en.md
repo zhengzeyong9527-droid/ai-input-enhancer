@@ -4,6 +4,15 @@
 
 All notable changes to this project are documented here.
 
+## 0.2.0 - 2026-08-18
+
+### Added and Changed
+
+- Split mode prompts into standalone configuration modules and prohibited injected confirmations, prerequisites, conditions, and assumptions in faithful mode.
+- Added optional, character-budgeted current-conversation and workspace Markdown context.
+- Write optimized text directly into the composer, with cancellation while optimizing and a green in-button undo state.
+- Collapse advanced settings by default and add an icon to the prompt optimization action.
+
 ## 0.1.0 - 2026-03-01
 
 ### Added
