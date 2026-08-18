@@ -6,6 +6,7 @@ const { systemPromptForMode } = require('./prompt/index.js');
 const { updateStatus } = require('./updater.js');
 const https = require('node:https');
 const path = require('node:path');
+const fs = require('node:fs');
 
 const RPC_PATH = '/zzy-dsh-prompt-optimizer/rpc';
 const MAX_REQUEST_BYTES = 96 * 1024;
@@ -29,6 +30,15 @@ function readLatestRelease() {
 
 function installedVersion() {
   return require(path.join(__dirname, '..', 'package.json')).version;
+}
+
+function installationKind() {
+  try {
+    const home = process.env.DSH_HOME || path.join(process.env.USERPROFILE || '', '.dsh');
+    const manifest = JSON.parse(fs.readFileSync(path.join(home, 'profiles', 'web', 'package.json'), 'utf8'));
+    const spec = manifest && manifest.dependencies && manifest.dependencies['zzy-dsh-prompt-optimizer'];
+    return typeof spec === 'string' && spec.indexOf('file:') === 0 ? 'local-development' : 'managed';
+  } catch { return 'unknown'; }
 }
 
 async function messagesFor(ctx, args, config) {
@@ -162,8 +172,10 @@ function createHandlers(ctx, pending) {
   }
 
   async function updateCheck() {
-    try { return updateStatus(installedVersion(), await readLatestRelease()); }
-    catch { return failure('UPDATE_CHECK_FAILED', 'Could not check the official GitHub release.'); }
+    try {
+      const result = updateStatus(installedVersion(), await readLatestRelease());
+      return result.ok ? { ...result, installation: installationKind(), canUpdate: result.available && installationKind() === 'managed' } : result;
+    } catch { return failure('UPDATE_CHECK_FAILED', 'Could not check the official GitHub release.'); }
   }
 
   function modelsList() {
