@@ -217,7 +217,7 @@ function OptimizerSettings() {
     callHost('update/check').then((result) => {
       if (!result || !result.ok) { setReleaseInfo(null); return setReleaseState((result && result.message) || '版本检测失败。'); }
       setReleaseInfo(result);
-      setReleaseState(result.installation === 'local-development' ? '当前使用本地开发安装，自动更新不可用。' : (result.available ? '发现 v' + result.latest + '。' : '当前已是最新版本（v' + result.current + '）。'));
+      setReleaseState(result.installation === 'local-development' ? '当前引用本地开发目录；为保护正在编辑的源码，自动更新已禁用。发布包或 Marketplace 安装不会显示此限制。' : (result.available ? '发现 v' + result.latest + '。' : '当前已是最新版本（v' + result.current + '）。'));
     }).catch(() => setReleaseState('版本检测请求失败。'));
   };
 
@@ -320,9 +320,12 @@ function insertStyles() {
     .zzy-prompt-optimizer__settings { display: grid; gap: 16px; max-width: 720px; padding: 8px 0; color: var(--dsh-text, #1e293b); }
     .zzy-prompt-optimizer__settings h2 { margin: 0; font-size: 16px; }
     .zzy-prompt-optimizer__settings p { margin: 0; color: var(--dsh-muted, #64748b); font-size: 13px; line-height: 1.5; }
-    .zzy-prompt-optimizer__advanced { display: grid; gap: 16px; }
+    .zzy-prompt-optimizer__advanced { display: grid; gap: 14px; }
     .zzy-prompt-optimizer__advanced > summary { width: fit-content; cursor: pointer; color: var(--dsh-text, #1e293b); font-size: 14px; font-weight: 600; }
     .zzy-prompt-optimizer__advanced > summary:focus-visible { outline: 2px solid var(--dsh-accent, #2563eb); outline-offset: 2px; }
+    .zzy-prompt-optimizer__advanced > .zzy-prompt-optimizer__field-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; padding-top: 14px; border-top: 1px solid var(--dsh-border, #cbd5e1); }
+    .zzy-prompt-optimizer__advanced > .zzy-prompt-optimizer__field-grid:first-of-type { padding-top: 0; border-top: 0; }
+    .zzy-prompt-optimizer__advanced > p, .zzy-prompt-optimizer__advanced > .zzy-prompt-optimizer__settings-actions { padding-top: 2px; }
     .zzy-prompt-optimizer__field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     .zzy-prompt-optimizer__field { display: grid; gap: 6px; font-size: 13px; }
     .zzy-prompt-optimizer__field input, .zzy-prompt-optimizer__field select { min-height: 32px; box-sizing: border-box; border: 1px solid var(--dsh-border, #cbd5e1); border-radius: 4px; background: transparent; color: inherit; padding: 0 8px; font: inherit; }
