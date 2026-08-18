@@ -2,21 +2,18 @@
 
 [中文](README.md) | [English](README.en.md)
 
-A preview-first prompt optimizer for DeepSeek Harness (DSH). It adds a prompt-optimization action to the composer, sends the draft through the selected DSH model route, and replaces the draft only after the user reviews and applies the preview.
+A prompt optimizer for DeepSeek Harness (DSH). It adds a prompt-optimization action to the composer, writes successful results directly into the draft, and lets you undo back to the original prompt.
 
 ## Features
 
 - Explicit faithful, developer, and specification modes.
-- Preview, apply, keep original, cancel, and undo workflows.
+- Visible loading state with cancellation while optimizing.
+- Direct draft replacement with one-click undo to the original prompt.
 - Optional session-local memory of the three most recently applied optimizations.
 - Optional budgeted current-conversation context.
 - Optional budgeted Markdown context from the current session workspace root.
 - Primary and fallback model routes, timeout, and output-token controls.
 - No API keys are stored by the plugin.
-
-## Prompt Configuration
-
-Host mode prompts live in `src/host/prompt/`: `faithful.js`, `developer.js`, and `specification.js`. The faithful configuration explicitly forbids added confirmation requests, prerequisites, warnings, conditional statements, and unstated assumptions. References to images, attachments, and documents are preserved without assessing their availability or clarity.
 
 ## Modes
 
@@ -36,24 +33,7 @@ Conversation context reads only current `user/message` and `assistant/message` t
 dsh plugin --profile web add zzy-dsh-prompt-optimizer
 ```
 
-For local development:
-
-```powershell
-npm run check
-dsh plugin --profile web remove zzy-dsh-prompt-optimizer
-dsh plugin --profile web add "file:D:\\Project\\zzy-dsh-prompt-enhance\\zzy-dsh-prompt-optimizer"
-```
-
-Restart the existing DSH Web process and refresh its existing URL. Do not start a second Web server for this plugin.
-
-## Development and Publishing
-
-```sh
-npm run check
-npm pack --dry-run
-```
-
-See [PUBLISHING.en.md](PUBLISHING.en.md) for publication guidance.
+Restart the existing DSH Web process and refresh its current URL.
 
 ## License
 
