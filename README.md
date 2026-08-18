@@ -2,21 +2,18 @@
 
 [中文](README.md) | [English](README.en.md)
 
-DeepSeek Harness（DSH）的预览优先提示词优化插件。插件在对话输入框增加“提示词优化”操作：将草稿发送到你选择的 DSH 模型路由，先展示优化预览，只有在你确认应用后才会修改输入框内容。
+DeepSeek Harness（DSH）的提示词优化插件。插件在对话输入框增加“提示词优化”操作：优化完成后直接将结果填入输入框，并允许你随时撤回到原始提示词。
 
 ## 功能
 
 - 三种明确的优化模式：保真优化、开发化表达、规格扩展。
-- 预览、应用、保留原文、取消与撤销工作流。
+- 优化中可取消，并显示加载状态。
+- 优化结果直接填入对话框，可一键撤回原始提示词。
 - 可选的会话内短期记忆：最多保留最近三轮已应用的优化结果。
 - 可选的当前会话上下文，并可设置字符预算。
 - 可选的工作区 Markdown 文档上下文，仅限当前会话的工作区根目录。
-- 主模型、回退模型、超时和最大输出 token 设置。
+- 可配置主模型、回退模型、超时和最大输出 token。
 - 不存储 API Key。
-
-## 提示词配置
-
-Host 端的模式提示词位于 `src/host/prompt/`：`faithful.js`、`developer.js` 与 `specification.js`。保真配置明确禁止向优化结果添加确认请求、前置条件、警告、条件语句或原文不存在的假设；当用户引用图片、附件或文档时，只保留该引用，不评估其是否已上传、清晰或可用。
 
 ## 优化模式
 
@@ -38,24 +35,7 @@ Host 端的模式提示词位于 `src/host/prompt/`：`faithful.js`、`developer
 dsh plugin --profile web add zzy-dsh-prompt-optimizer
 ```
 
-本地开发时，先构建，再使用 `file:` 依赖：
-
-```powershell
-npm run check
-dsh plugin --profile web remove zzy-dsh-prompt-optimizer
-dsh plugin --profile web add "file:D:\\Project\\zzy-dsh-prompt-enhance\\zzy-dsh-prompt-optimizer"
-```
-
-重启现有 DSH Web 进程并刷新其现有 URL；不要为此插件启动第二个 Web 服务器。
-
-## 开发与发布
-
-```sh
-npm run check
-npm pack --dry-run
-```
-
-发布说明见 [PUBLISHING.md](PUBLISHING.md)。
+重启现有 DSH Web 进程并刷新当前 URL。
 
 ## 许可证
 
