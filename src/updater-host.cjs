@@ -84,13 +84,51 @@ async function restartWeb() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     if (await webHealthy()) { state.phase = 'healthy'; state.message = 'DSH Web restarted.'; return { ok: true, pid: child.pid, healthy: true }; }
   }
-  state.phase = 'failed'; state.message = 'DSH Web did not become healthy.';
-  return { ok: false, code: 'RESTART_TIMEOUT' };
+  const restored = restoreProfile(state.backup);
+  const dependenciesRestored = restored ? await restoreDependencies() : false;
+  state.phase = dependenciesRestored ? 'rolled-back' : (restored ? 'rollback-pending' : 'failed');
+  state.message = dependenciesRestored ? 'DSH Web did not become healthy; profile restored.' : (restored ? 'DSH Web did not become healthy; profile files restored.' : 'DSH Web did not become healthy.');
+  return { ok: false, code: dependenciesRestored ? 'RESTART_TIMEOUT_ROLLED_BACK' : 'RESTART_TIMEOUT' };
+}
+
+function profilePaths() {
+  const home = process.env.DSH_HOME || path.join(process.env.USERPROFILE || '', '.dsh');
+  const dir = path.join(home, 'profiles', 'web');
+  return { manifest: path.join(dir, 'package.json'), lock: path.join(dir, 'pnpm-lock.yaml'), backup: path.join(os.tmpdir(), PACKAGE, 'profile-backup') };
+}
+
+function backupProfile() {
+  const files = profilePaths();
+  if (!fs.existsSync(files.manifest)) return null;
+  fs.mkdirSync(files.backup, { recursive: true });
+  fs.copyFileSync(files.manifest, path.join(files.backup, 'package.json'));
+  if (fs.existsSync(files.lock)) fs.copyFileSync(files.lock, path.join(files.backup, 'pnpm-lock.yaml'));
+  return files;
+}
+
+function restoreProfile(files) {
+  if (!files || !fs.existsSync(path.join(files.backup, 'package.json'))) return false;
+  fs.copyFileSync(path.join(files.backup, 'package.json'), files.manifest);
+  const savedLock = path.join(files.backup, 'pnpm-lock.yaml');
+  if (fs.existsSync(savedLock)) fs.copyFileSync(savedLock, files.lock);
+  return true;
+}
+
+function restoreDependencies() {
+  return new Promise((resolve) => {
+    if (!DSH_BIN || !fs.existsSync(DSH_BIN)) return resolve(false);
+    const child = spawn(process.execPath, [DSH_BIN, 'plugin', '--profile', 'web', 'install'], { windowsHide: true, stdio: 'ignore' });
+    child.once('error', () => resolve(false));
+    child.once('close', (code) => resolve(code === 0));
+  });
 }
 
 function install(staged) {
   return new Promise((resolve) => {
     if (!DSH_BIN || !fs.existsSync(DSH_BIN)) return resolve({ ok: false, code: 'DSH_BIN_UNAVAILABLE' });
+    const backup = backupProfile();
+    if (!backup) return resolve({ ok: false, code: 'PROFILE_UNAVAILABLE' });
+    state.backup = backup;
     if (typeof staged !== 'string' || !staged.startsWith(os.tmpdir()) || !fs.existsSync(staged)) return resolve({ ok: false, code: 'BAD_STAGING_PATH' });
     const child = spawn(process.execPath, [DSH_BIN, 'plugin', '--profile', 'web', 'add', staged], { windowsHide: true, stdio: 'ignore' });
     child.once('error', () => resolve({ ok: false, code: 'INSTALL_SPAWN_FAILED' }));
