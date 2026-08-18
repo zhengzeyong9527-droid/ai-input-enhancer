@@ -8,6 +8,7 @@ const https = require('node:https');
 const http = require('node:http');
 const path = require('node:path');
 const fs = require('node:fs');
+const { spawn } = require('node:child_process');
 
 const RPC_PATH = '/zzy-dsh-prompt-optimizer/rpc';
 const MAX_REQUEST_BYTES = 96 * 1024;
@@ -41,6 +42,18 @@ function executorCall(method, args) {
     request.on('timeout', () => { request.destroy(); resolve({ ok: false, code: 'EXECUTOR_TIMEOUT' }); });
     request.end(body);
   });
+}
+
+async function ensureExecutor() {
+  const existing = await executorCall('ping', {});
+  if (existing && existing.ok) return existing;
+  const script = path.join(__dirname, 'updater-host.cjs');
+  const dshBin = process.argv[1];
+  if (!fs.existsSync(script) || !dshBin || !fs.existsSync(dshBin)) return { ok: false, code: 'EXECUTOR_START_UNAVAILABLE' };
+  const child = spawn(process.execPath, [script], { detached: true, stdio: 'ignore', windowsHide: true, env: { ...process.env, DSH_DSH_BIN: dshBin } });
+  child.unref();
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  return executorCall('ping', {});
 }
 
 function installedVersion() {
@@ -197,6 +210,8 @@ function createHandlers(ctx, pending) {
     const check = await updateCheck();
     if (!check.ok || !check.available) return check.ok ? failure('NO_UPDATE', 'No newer official release is available.') : check;
     if (check.installation !== 'managed') return failure('LOCAL_DEVELOPMENT_INSTALL', 'Automatic update is unavailable for a local development installation.');
+    const executor = await ensureExecutor();
+    if (!executor || !executor.ok) return failure('EXECUTOR_UNREACHABLE', 'The local update executor could not be started.');
     const release = await readLatestRelease();
     const validated = require('./updater.js').validateRelease(release);
     if (!validated) return failure('INVALID_RELEASE', 'The latest official release is missing a verified package asset.');
