@@ -3,12 +3,32 @@
 const { DEFAULT_MAX_TOKENS, DEFAULT_TIMEOUT_MS, cleanResult, createMessage, modelSelection, requestKey, resolveRoutes, validateCancelArgs, validateEnhanceArgs } = require('./pure.js');
 const { conversationContext, workspaceDocumentContext } = require('./context-provider.js');
 const { systemPromptForMode } = require('./prompt/index.js');
+const { updateStatus } = require('./updater.js');
+const https = require('node:https');
+const path = require('node:path');
 
 const RPC_PATH = '/zzy-dsh-prompt-optimizer/rpc';
 const MAX_REQUEST_BYTES = 96 * 1024;
 
 function systemPromptFor(config) {
   return systemPromptForMode(config.mode);
+}
+
+function readLatestRelease() {
+  return new Promise((resolve, reject) => {
+    const request = https.get('https://api.github.com/repos/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer/releases/latest', { headers: { 'user-agent': 'zzy-dsh-prompt-optimizer' } }, (response) => {
+      let body = '';
+      response.setEncoding('utf8');
+      response.on('data', (chunk) => { body += chunk; });
+      response.on('end', () => response.statusCode === 200 ? resolve(JSON.parse(body)) : reject(new Error('Release check failed with HTTP ' + response.statusCode)));
+    });
+    request.setTimeout(10000, () => request.destroy(new Error('Release check timed out')));
+    request.on('error', reject);
+  });
+}
+
+function installedVersion() {
+  return require(path.join(__dirname, '..', 'package.json')).version;
 }
 
 async function messagesFor(ctx, args, config) {
@@ -141,6 +161,11 @@ function createHandlers(ctx, pending) {
     return record ? { ok: true, stage: record.stage, model: record.model, elapsedMs: Date.now() - record.startedAt } : { ok: false, code: 'NOT_FOUND' };
   }
 
+  async function updateCheck() {
+    try { return updateStatus(installedVersion(), await readLatestRelease()); }
+    catch { return failure('UPDATE_CHECK_FAILED', 'Could not check the official GitHub release.'); }
+  }
+
   function modelsList() {
     const llm = ctx.get('llm');
     const providers = llm && typeof llm.listProviders === 'function' ? llm.listProviders().map((entry) => ({ id: entry.id, name: entry.name })) : [];
@@ -162,7 +187,7 @@ function createHandlers(ctx, pending) {
     } finally { timeout(); }
   }
 
-  return { enhance, cancel, progress, 'models/list': modelsList, 'models/test': modelsTest };
+  return { enhance, cancel, progress, 'update/check': updateCheck, 'models/list': modelsList, 'models/test': modelsTest };
 }
 
 module.exports = {
