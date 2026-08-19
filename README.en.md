@@ -2,6 +2,10 @@
 
 [中文](README.md) | [English](README.en.md)
 
+[![Release](https://img.shields.io/github/v/release/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer)](https://github.com/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer/releases/latest)
+[![License](https://img.shields.io/github/license/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer)](LICENSE)
+[![DSH Plugin List](https://img.shields.io/badge/DSH%20Plugin%20List-Listed-16a34a)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin#ui-enhancements)
+
 A prompt optimizer for DeepSeek Harness (DSH). It adds a prompt-optimization action to the composer, writes successful results directly into the draft, and lets you undo back to the original prompt.
 
 ## Features
@@ -17,9 +21,19 @@ A prompt optimizer for DeepSeek Harness (DSH). It adds a prompt-optimization act
 
 ## Interface
 
+**Composer action**
+
+<img src="assets/screenshots/composer-action.png" alt="Prompt optimization action" width="520">
+
+**Advanced settings**
+
 Advanced settings are grouped into optimization strategy, conversation context, workspace document context, and model limits so long explanations and inputs stay readable.
 
-![Advanced settings](assets/screenshots/advanced-settings.png)
+<img src="assets/screenshots/advanced-settings.png" alt="Advanced settings" width="520">
+
+**Model and execution limits**
+
+<img src="assets/screenshots/model-limits.png" alt="Model and execution limits" width="520">
 
 ## Modes
 
