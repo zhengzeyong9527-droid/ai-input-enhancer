@@ -6,6 +6,7 @@
   "type": "commonjs",
   "files": [
     "lib",
+    "assets/screenshots",
     "plugin-host.js",
     "plugin-client.js",
     "cordis.patch.yml",
