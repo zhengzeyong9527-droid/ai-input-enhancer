@@ -15,6 +15,12 @@ A prompt optimizer for DeepSeek Harness (DSH). It adds a prompt-optimization act
 - Primary and fallback model routes, timeout, and output-token controls.
 - No API keys are stored by the plugin.
 
+## Interface
+
+Advanced settings are grouped into optimization strategy, conversation context, workspace document context, and model limits so long explanations and inputs stay readable.
+
+![Advanced settings](assets/screenshots/advanced-settings.png)
+
 ## Modes
 
 - **Faithful** improves clarity without inventing requirements, facts, architecture, or scope.
