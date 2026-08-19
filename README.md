@@ -2,6 +2,10 @@
 
 [中文](README.md) | [English](README.en.md)
 
+[![Release](https://img.shields.io/github/v/release/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer)](https://github.com/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer/releases/latest)
+[![License](https://img.shields.io/github/license/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer)](LICENSE)
+[![DSH Plugin List](https://img.shields.io/badge/DSH%20Plugin%20List-Listed-16a34a)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin#ui-enhancements)
+
 DeepSeek Harness（DSH）的提示词优化插件。插件在对话输入框增加“提示词优化”操作：优化完成后直接将结果填入输入框，并允许你随时撤回到原始提示词。
 
 ## 功能
@@ -17,9 +21,19 @@ DeepSeek Harness（DSH）的提示词优化插件。插件在对话输入框增�
 
 ## 界面
 
+**输入框入口**
+
+<img src="assets/screenshots/composer-action.png" alt="提示词优化操作入口" width="520">
+
+**高级设置**
+
 高级设置按优化策略、会话上下文、工作区文档上下文和模型限制分段展示，避免长说明和输入项交错。
 
-![高级设置](assets/screenshots/advanced-settings.png)
+<img src="assets/screenshots/advanced-settings.png" alt="高级设置" width="520">
+
+**模型与执行限制**
+
+<img src="assets/screenshots/model-limits.png" alt="模型与执行限制" width="520">
 
 ## 优化模式
 
