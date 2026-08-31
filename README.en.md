@@ -1,9 +1,9 @@
-# zzy-dsh-prompt-optimizer
+# AI Input Enhancer
 
 [中文](README.md) | [English](README.en.md)
 
-[![Release](https://img.shields.io/github/v/release/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer)](https://github.com/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer/releases/latest)
-[![License](https://img.shields.io/github/license/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/zhengzeyong9527-droid/ai-input-enhancer)](https://github.com/zhengzeyong9527-droid/ai-input-enhancer/releases/latest)
+[![License](https://img.shields.io/github/license/zhengzeyong9527-droid/ai-input-enhancer)](LICENSE)
 [![DSH Plugin List](https://img.shields.io/badge/DSH%20Plugin%20List-Listed-16a34a)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin#ui-enhancements)
 
 A prompt optimizer for DeepSeek Harness (DSH). It adds a prompt-optimization action to the composer, writes successful results directly into the draft, and lets you undo back to the original prompt.

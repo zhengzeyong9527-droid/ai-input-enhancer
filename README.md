@@ -1,9 +1,9 @@
-# zzy-dsh-prompt-optimizer
+# AI Input Enhancer
 
 [中文](README.md) | [English](README.en.md)
 
-[![Release](https://img.shields.io/github/v/release/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer)](https://github.com/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer/releases/latest)
-[![License](https://img.shields.io/github/license/zhengzeyong9527-droid/zzy-dsh-prompt-optimizer)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/zhengzeyong9527-droid/ai-input-enhancer)](https://github.com/zhengzeyong9527-droid/ai-input-enhancer/releases/latest)
+[![License](https://img.shields.io/github/license/zhengzeyong9527-droid/ai-input-enhancer)](LICENSE)
 [![DSH Plugin List](https://img.shields.io/badge/DSH%20Plugin%20List-Listed-16a34a)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin#ui-enhancements)
 
 DeepSeek Harness（DSH）的提示词优化插件。插件在对话输入框增加“提示词优化”操作：优化完成后直接将结果填入输入框，并允许你随时撤回到原始提示词。
