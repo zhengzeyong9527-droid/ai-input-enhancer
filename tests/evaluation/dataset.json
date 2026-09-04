@@ -1,0 +1,244 @@
+{
+  "cases": [
+    {
+      "id": "faithful-01",
+      "mode": "faithful",
+      "prompt": "请修复 src/auth/token.js 中 refreshToken 在 refresh_token 缺失时抛出 TypeError 的问题。已知接口约定是缺失 refresh_token 时返回 401 JSON 错误。只修改该文件，不改变成功路径响应结构，不新增依赖，也不要重构其他认证逻辑。",
+      "taskType": "code-change",
+      "intendedConstraints": ["只修改 src/auth/token.js", "缺失 refresh_token 时返回 401 JSON", "成功路径响应结构不变", "不新增依赖", "不重构其他认证逻辑"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "faithful-02",
+      "mode": "faithful",
+      "prompt": "排查 worker 日志中“queue job timed out after 30000ms”。先根据现有 logs/worker.log 和 config/worker.yml 给出最可能原因及验证步骤；不要修改配置、不要重启服务、不要假设 Redis 或网络一定故障。",
+      "taskType": "debugging",
+      "intendedConstraints": ["只分析 logs/worker.log 和 config/worker.yml", "给出原因和验证步骤", "不修改配置", "不重启服务", "不假设 Redis 或网络一定故障"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "faithful-03",
+      "mode": "faithful",
+      "prompt": "为 README.md 增加“本地开发”章节，说明 npm install、npm run check 和如何加载本地插件。保持现有中文写作风格，不改动安装章节，不添加未验证的命令或截图。",
+      "taskType": "documentation",
+      "intendedConstraints": ["只更新 README.md", "说明 npm install、npm run check 和本地加载", "保持中文风格", "不改安装章节", "不添加未验证命令或截图"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "faithful-04",
+      "mode": "faithful",
+      "prompt": "读取 data/orders.csv，计算 2025-01-01 至 2025-01-31 每个 region 的已支付订单数和金额总和。仅统计 status=paid 的记录，金额使用 amount 列，不修正源数据，不推断缺失 region 的归属，结果用 Markdown 表格输出。",
+      "taskType": "data-analysis",
+      "intendedConstraints": ["日期范围为 2025-01-01 至 2025-01-31", "仅 status=paid", "金额使用 amount", "不修正源数据", "不推断缺失 region", "输出 Markdown 表格"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "faithful-05",
+      "mode": "faithful",
+      "prompt": "为 deploy/restart-web.ps1 添加一次端口 3080 可用性检查：重启命令执行后最多等待 30 秒，每秒检查一次；超时只返回非零退出码和清晰错误信息。不要杀死其他进程，不要更改服务启动命令，不要加入管理员权限要求。",
+      "taskType": "operations",
+      "intendedConstraints": ["只修改 deploy/restart-web.ps1", "检查端口 3080", "最多等待 30 秒且每秒检查一次", "超时返回非零退出码和清晰错误", "不杀死其他进程", "不改服务启动命令", "不要求管理员权限"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "faithful-06",
+      "mode": "faithful",
+      "prompt": "给 parseUserConfig 函数补充测试，覆盖空对象、缺少 timeout、timeout 为字符串“5000”、timeout 小于 1000 四种情况。沿用现有 Node test 风格，只添加测试文件或测试用例，不改生产代码，也不要改变当前默认值。",
+      "taskType": "testing",
+      "intendedConstraints": ["覆盖四种指定情况", "沿用 Node test 风格", "只添加测试", "不改生产代码", "不改变默认值"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "faithful-07",
+      "mode": "faithful",
+      "prompt": "把 API 响应中的 errorMessage 字段改名为 message，仅处理 POST /api/import 的失败响应。客户端尚未迁移，因此请同时保留 errorMessage 作为兼容字段；不要修改其他路由，不改变 HTTP 状态码。",
+      "taskType": "code-change",
+      "intendedConstraints": ["仅处理 POST /api/import 失败响应", "新增 message", "保留 errorMessage 兼容字段", "不修改其他路由", "不改变 HTTP 状态码"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "faithful-08",
+      "mode": "faithful",
+      "prompt": "分析 tests/api.test.cjs 中间歇性失败的“expected 2 calls, got 3”。请指出可能共享状态的位置，并给出最小修复建议。不要直接删除断言，不要提高测试超时，不要声称已经复现，除非日志或代码明确证明。",
+      "taskType": "debugging",
+      "intendedConstraints": ["指出可能共享状态位置", "给出最小修复建议", "不删除断言", "不提高超时", "无明确证据时不声称已复现"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "faithful-09",
+      "mode": "faithful",
+      "prompt": "编写一份面向值班人员的 runbook，说明当 /health 返回 503 时如何收集信息并升级。内容只包含查看应用日志、确认依赖健康状态、记录时间窗口和联系 on-call；不要写自动修复、不要暴露密钥、不要假设 Kubernetes 环境。",
+      "taskType": "documentation",
+      "intendedConstraints": ["面向值班人员", "仅含四类指定步骤", "不写自动修复", "不暴露密钥", "不假设 Kubernetes"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "faithful-10",
+      "mode": "faithful",
+      "prompt": "在现有 SQLite 查询中增加 created_at 从 2024-10-01 到 2024-12-31 的过滤，并保留原有 user_id 过滤和排序。不要创建索引，不要迁移数据库，不要修改日期边界为滚动窗口。",
+      "taskType": "data-change",
+      "intendedConstraints": ["增加固定日期范围过滤", "保留 user_id 过滤", "保留原排序", "不创建索引", "不迁移数据库", "不改为滚动窗口"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "developer-01",
+      "mode": "developer",
+      "prompt": "现有服务是 Node.js CommonJS，HTTP 层使用 Express，测试使用 node:test。请为 GET /api/projects 增加可选的 limit 查询参数，默认 20，允许 1 到 100 的整数，非法值返回 400 JSON。数据库访问层已有 listProjects(limit) 可用。只修改路由与对应测试，不新增框架、ORM 或校验库，也不要改变其他接口。",
+      "taskType": "code-change",
+      "intendedConstraints": ["Node.js CommonJS", "Express", "node:test", "limit 默认 20", "范围 1-100 整数", "非法值返回 400 JSON", "使用已有 listProjects(limit)", "只改路由与测试", "不新增框架、ORM 或校验库", "不改其他接口"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "developer-02",
+      "mode": "developer",
+      "prompt": "项目当前通过 pnpm workspace 管理 packages/api 和 packages/web，CI 已执行 pnpm -r test。请定位 packages/api 在 Windows CI 上偶发 EBUSY 的清理失败，并提出最小修复。已有临时目录工具是 packages/api/src/tmp.js。不要替换包管理器，不要关闭 Windows CI，不要把重试次数设为无限，也不要修改 web 包。",
+      "taskType": "debugging",
+      "intendedConstraints": ["pnpm workspace", "范围仅 packages/api", "Windows CI 偶发 EBUSY", "使用已有 tmp.js", "最小修复", "不替换包管理器", "不关闭 Windows CI", "不无限重试", "不修改 packages/web"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "developer-03",
+      "mode": "developer",
+      "prompt": "仓库文档使用 Markdown，命令示例采用 PowerShell，发布流程由 .github/workflows/release.yml 触发。请补充 RELEASE.md，解释如何创建带 tarball 的 GitHub Release、如何核对 SHA-256 digest、以及失败时不要覆盖既有 Release。不要发明 npm registry 发布步骤，不要编辑 workflow 文件，不要写入真实 token。",
+      "taskType": "documentation",
+      "intendedConstraints": ["Markdown", "PowerShell 命令风格", "参考 release.yml 事实", "说明 tarball、SHA-256 和不覆盖既有 Release", "不发明 npm registry 步骤", "不编辑 workflow", "不写真实 token"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "developer-04",
+      "mode": "developer",
+      "prompt": "数据管道使用 Python 3.11 和 pandas，输入为 data/events.parquet，输出必须是 reports/daily.csv。请按 UTC 日期统计 event_type 的数量，并排除 is_test=true。现有脚本为 scripts/report.py，不能改变输出列名 date、event_type、count；不要引入 Spark、数据库或第三方服务，也不要删除原始 parquet 文件。",
+      "taskType": "data-processing",
+      "intendedConstraints": ["Python 3.11", "pandas", "输入 data/events.parquet", "输出 reports/daily.csv", "按 UTC 日期统计", "排除 is_test=true", "保持三列名", "只改 scripts/report.py", "不引入 Spark、数据库或服务", "不删除源文件"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "developer-05",
+      "mode": "developer",
+      "prompt": "部署环境是 Windows Server，服务由 node lib/bin.js web 启动，健康检查端口固定 3080。请为 scripts/check-web.ps1 增加检查：若端口不可连接则输出诊断文本并返回 1；若可连接则返回 0。不要停止或启动服务，不要使用管理员命令，不要改端口，也不要引入计划任务。",
+      "taskType": "operations",
+      "intendedConstraints": ["Windows Server", "node lib/bin.js web", "端口 3080", "修改 scripts/check-web.ps1", "失败输出诊断并返回 1", "成功返回 0", "不启停服务", "不使用管理员命令", "不改端口", "不引入计划任务"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "developer-06",
+      "mode": "developer",
+      "prompt": "前端是 React.createElement 写法，没有 JSX，构建脚本把 src/client/app.js 复制为 lib/client.cjs。请给 settings 中的“检测版本”按钮增加禁用态，避免请求进行中重复点击。测试为 Node 静态 bundle smoke test，不使用 Playwright。不要引入 React 状态管理库，不要改 Host RPC 协议，不要添加浏览器端网络请求。",
+      "taskType": "code-change",
+      "intendedConstraints": ["React.createElement，无 JSX", "src/client/app.js 到 lib/client.cjs", "请求中禁用检测版本按钮", "使用 Node bundle smoke test", "不引入状态管理库", "不改 Host RPC", "不添加浏览器网络请求"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "developer-07",
+      "mode": "developer",
+      "prompt": "后端日志使用 pino，配置通过环境变量 LOG_LEVEL 控制，当前默认 info。请调查生产日志缺少 requestId 的原因，并给出代码级最小补充方案。不要切换日志库，不要把默认级别改为 debug，不要在日志中记录 Authorization 头或请求体。",
+      "taskType": "debugging",
+      "intendedConstraints": ["使用 pino", "LOG_LEVEL 控制且默认 info", "调查 requestId 缺失", "给出代码级最小方案", "不切换日志库", "不改默认 debug", "不记录 Authorization 或请求体"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "developer-08",
+      "mode": "developer",
+      "prompt": "现有 Bash 运维脚本位于 ops/backup.sh，目标服务器已提供 pg_dump 和 gzip，备份目录由 BACKUP_DIR 环境变量提供。请增加保留最近 7 个备份文件的清理步骤，并保留当前失败即退出行为。不要引入 cron、云存储或新的命令行工具，不要删除当天生成的备份。",
+      "taskType": "operations",
+      "intendedConstraints": ["修改 ops/backup.sh", "使用已有 pg_dump 和 gzip", "使用 BACKUP_DIR", "保留最近 7 个备份", "保留失败即退出", "不引入 cron、云存储或工具", "不删除当天备份"],
+      "difficulty": "medium"
+    },
+    {
+      "id": "developer-09",
+      "mode": "developer",
+      "prompt": "测试套件使用 Vitest，组件已有 tests/Button.test.tsx，fetch 已由 vi.stubGlobal 模拟。请为保存按钮增加“服务返回 409 时显示冲突提示且不关闭对话框”的测试。不要改组件实现，不要使用真实网络，不要修改全局测试配置。",
+      "taskType": "testing",
+      "intendedConstraints": ["Vitest", "已有 Button.test.tsx", "fetch 用 vi.stubGlobal", "测试 409 冲突提示且对话框不关闭", "不改组件", "不使用真实网络", "不改全局测试配置"],
+      "difficulty": "easy"
+    },
+    {
+      "id": "developer-10",
+      "mode": "developer",
+      "prompt": "当前 API 用 PostgreSQL，迁移文件放在 db/migrations，查询层使用参数化 SQL。请为 users 表增加 last_seen_at 可空 timestamptz 列，并在用户成功登录后更新该列。请同时提供迁移回滚方案和测试点。不要替换数据库、ORM 或查询层，不要把该字段设为非空，不要记录登录失败时间。",
+      "taskType": "code-change",
+      "intendedConstraints": ["PostgreSQL", "迁移位于 db/migrations", "参数化 SQL", "新增可空 timestamptz", "仅成功登录时更新", "提供回滚方案和测试点", "不替换数据库、ORM 或查询层", "字段不可设为非空", "不记录失败登录时间"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-01",
+      "mode": "specification",
+      "prompt": "为一个团队内部的“批量导入客户 CSV”功能编写完整开发规格。用户可上传 CSV，系统需要校验列、显示错误并在成功后写入客户数据。请覆盖目标、范围、用户流程、字段规则、API、数据模型、错误处理、权限、测试、发布与回滚。所有原提示词未提供的选择必须在 `## Default assumptions` 下逐项明确标记；不要把假设伪装成既定事实。",
+      "taskType": "specification",
+      "intendedConstraints": ["完整开发规格", "覆盖十个指定方面", "所有缺失信息在 ## Default assumptions 标记", "不把假设写成事实"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-02",
+      "mode": "specification",
+      "prompt": "为“订单支付失败后允许客户重新支付”的能力编写完整规格。需要说明状态流转、重复请求处理、支付回调、安全边界、前后端交互、监控、测试和上线策略。所有未说明的支付渠道、超时、幂等键、权限和通知策略必须写入 `## Default assumptions`；不要声明已存在任何第三方支付 SDK。",
+      "taskType": "specification",
+      "intendedConstraints": ["完整规格", "覆盖状态流转、重复请求、回调、安全、交互、监控、测试、上线", "缺失支付渠道、超时、幂等、权限、通知必须在 ## Default assumptions", "不声明已有第三方 SDK"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-03",
+      "mode": "specification",
+      "prompt": "为“每天生成运营指标邮件”编写完整规格。指标包括新增用户、付费订单和退款金额，收件人是运营团队。请定义数据口径、时区、失败重试、邮件模板、权限、审计、测试和运维告警。所有未给出的数据源、发送服务、运行时间和保留期限必须放在 `## Default assumptions`，并明确它们可配置。",
+      "taskType": "specification",
+      "intendedConstraints": ["完整规格", "定义八类指定内容", "数据源、发送服务、运行时间、保留期限列入 ## Default assumptions", "明确可配置"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-04",
+      "mode": "specification",
+      "prompt": "为“管理员查看并导出审计日志”编写完整开发规格。日志应支持按时间、操作者和动作筛选，并导出 CSV。请说明数据字段、分页、查询性能、访问控制、脱敏、导出限制、API、前端状态、测试和回滚。所有未给出的日志保留期、最大导出行数、角色名称和存储方案必须在 `## Default assumptions` 标记。",
+      "taskType": "specification",
+      "intendedConstraints": ["完整开发规格", "支持三类筛选和 CSV", "覆盖十类指定内容", "四类缺失信息放入 ## Default assumptions"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-05",
+      "mode": "specification",
+      "prompt": "为“上传图片后生成多尺寸缩略图”编写完整规格。用户上传图片后需要查看处理进度并获得原图和缩略图地址。请覆盖文件限制、处理队列、失败恢复、存储、缓存、安全、API、前端、测试、监控和成本边界。所有未说明的图片格式、尺寸集合、存储提供商和保留策略必须在 `## Default assumptions` 中明确标记。",
+      "taskType": "specification",
+      "intendedConstraints": ["完整规格", "覆盖十一类指定内容", "图片格式、尺寸、存储提供商、保留策略在 ## Default assumptions 标记"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-06",
+      "mode": "specification",
+      "prompt": "为“将旧系统用户数据迁移到新账户服务”编写完整迁移规格。需要涵盖字段映射、唯一性冲突、密码处理、分批执行、可观测性、验证、回滚、数据保护和上线窗口。所有未说明的旧库类型、新服务接口、密码算法和批次大小必须写在 `## Default assumptions`，并将高风险假设单独标出。",
+      "taskType": "data-migration",
+      "intendedConstraints": ["完整迁移规格", "覆盖九类指定内容", "四类缺失信息在 ## Default assumptions", "高风险假设单独标出"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-07",
+      "mode": "specification",
+      "prompt": "为“生产环境配置变更审批与发布”编写完整运维规格。需要支持提交变更、双人审批、定时发布、失败停止、审计记录和紧急变更。请定义流程、角色、状态、权限、通知、执行器边界、健康检查、回滚、测试与安全要求。所有未说明的审批时限、通知渠道、执行环境和紧急授权条件必须在 `## Default assumptions` 中标记。",
+      "taskType": "operations",
+      "intendedConstraints": ["完整运维规格", "支持六项指定能力", "覆盖十类指定内容", "四类缺失信息在 ## Default assumptions"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-08",
+      "mode": "specification",
+      "prompt": "为“用户可创建并共享只读数据看板”编写完整规格。看板包含图表、筛选器和链接分享。请覆盖用户目标、权限模型、链接失效、数据刷新、查询限制、可访问性、前端交互、API、测试、监控和隐私。所有未说明的图表库、链接有效期、刷新频率和数据源权限规则必须在 `## Default assumptions` 中明确。",
+      "taskType": "specification",
+      "intendedConstraints": ["完整规格", "覆盖十一类指定内容", "四类缺失信息在 ## Default assumptions", "明确隐私"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-09",
+      "mode": "specification",
+      "prompt": "为“API 限流与配额管理”编写完整规格。不同客户需要不同配额，超限时返回清晰错误，并允许管理员查看使用量。请说明计数策略、并发处理、响应头、套餐配置、管理接口、监控、告警、测试、迁移和回滚。所有未说明的限流算法、时间窗口、存储层和客户标识方式必须写入 `## Default assumptions`。",
+      "taskType": "specification",
+      "intendedConstraints": ["完整规格", "支持差异化配额和管理员使用量查看", "覆盖十类指定内容", "四类缺失信息在 ## Default assumptions"],
+      "difficulty": "hard"
+    },
+    {
+      "id": "specification-10",
+      "mode": "specification",
+      "prompt": "为“代码仓库中的依赖漏洞报告与修复建议”编写完整规格。系统需要扫描依赖清单、展示风险、生成修复建议，并允许忽略带原因的结果。请覆盖输入、扫描频率、漏洞来源、严重性规则、权限、忽略流程、通知、数据保留、测试、发布和失败降级。所有未说明的扫描引擎、漏洞数据库、通知方式和保留期必须在 `## Default assumptions` 中标记，且不要假定可自动修改代码。",
+      "taskType": "specification",
+      "intendedConstraints": ["完整规格", "覆盖十一类指定内容", "四类缺失信息在 ## Default assumptions", "不假定自动修改代码"],
+      "difficulty": "hard"
+    }
+  ]
+}
