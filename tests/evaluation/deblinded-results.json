@@ -1,0 +1,1253 @@
+{
+  "protocolVersion": 1,
+  "cases": [
+    {
+      "id": "faithful-01",
+      "mode": "faithful",
+      "taskType": "code-change",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "两者均在解构前加守卫，复用既有401约定并保持成功路径不变。"
+    },
+    {
+      "id": "faithful-02",
+      "mode": "faithful",
+      "taskType": "debugging",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均限定日志和配置证据，给出可验证的原因排序，未预设Redis或网络故障。"
+    },
+    {
+      "id": "faithful-03",
+      "mode": "faithful",
+      "taskType": "documentation",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 4,
+        "fidelity": 3,
+        "clarityExecutability": 4,
+        "constraintAdherence": 3,
+        "restraint": 3,
+        "success": true,
+        "unsupportedAssumption": true,
+        "scopeExpansion": true,
+        "constraintViolation": false
+      },
+      "winner": "A",
+      "reason": "候选1擅自给出未验证的本地加载命令及重启要求；候选2明确要求以现有脚本和文档为准。"
+    },
+    {
+      "id": "faithful-04",
+      "mode": "faithful",
+      "taskType": "data-analysis",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均拒绝编造未读取CSV的数值，并完整保留日期、paid、amount和缺失region约束。"
+    },
+    {
+      "id": "faithful-05",
+      "mode": "faithful",
+      "taskType": "operations",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "两者都在原重启后以非侵入方式轮询3080，并满足30秒、每秒、失败非零要求。"
+    },
+    {
+      "id": "faithful-06",
+      "mode": "faithful",
+      "taskType": "testing",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "B",
+      "reason": "均尊重既有函数契约和默认值；候选2对四类断言的组织与默认行为取值更明确。"
+    },
+    {
+      "id": "faithful-07",
+      "mode": "faithful",
+      "taskType": "code-change",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均仅改导入失败响应，同时保留message和errorMessage，且不改状态码或其他路由。"
+    },
+    {
+      "id": "faithful-08",
+      "mode": "faithful",
+      "taskType": "debugging",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均列出合理共享状态来源及最小隔离清理方案，保留断言和超时且不虚称复现。"
+    },
+    {
+      "id": "faithful-09",
+      "mode": "faithful",
+      "taskType": "documentation",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "两份runbook均只覆盖信息收集和升级，避免自动修复、密钥暴露及Kubernetes假设。"
+    },
+    {
+      "id": "faithful-10",
+      "mode": "faithful",
+      "taskType": "data-change",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均以固定半开日期区间完整覆盖12月31日，并保留user_id、排序和既有限制。"
+    },
+    {
+      "id": "developer-01",
+      "mode": "developer",
+      "taskType": "code-change",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 4,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": true,
+        "constraintViolation": false
+      },
+      "winner": "A",
+      "reason": "候选1额外规定重复参数和空值处理而原题未要求；候选2覆盖所需边界且更克制。"
+    },
+    {
+      "id": "developer-02",
+      "mode": "developer",
+      "taskType": "debugging",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 4,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": true,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "B",
+      "reason": "两者均为tmp.js内有限重试；候选2额外规定每测试唯一目录，未必是最小修复。"
+    },
+    {
+      "id": "developer-03",
+      "mode": "developer",
+      "taskType": "documentation",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "两者均以PowerShell SHA-256核验、GitHub Release资产和不覆盖既有Release为中心，未虚构npm发布。"
+    },
+    {
+      "id": "developer-04",
+      "mode": "developer",
+      "taskType": "data-processing",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 4,
+        "fidelity": 4,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 4,
+        "success": true,
+        "unsupportedAssumption": true,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "A",
+      "reason": "候选1对无时区时间的处理依赖未说明的数据契约；候选2直接要求UTC解析且覆盖空结果表头。"
+    },
+    {
+      "id": "developer-05",
+      "mode": "developer",
+      "taskType": "operations",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均只做3080只读连通性检查，并明确成功0、失败诊断和1，不启停服务。"
+    },
+    {
+      "id": "developer-06",
+      "mode": "developer",
+      "taskType": "code-change",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均使用局部React状态和finally复位按钮禁用态，保持RPC、无JSX及静态bundle测试约束。"
+    },
+    {
+      "id": "developer-07",
+      "mode": "developer",
+      "taskType": "debugging",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 4,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": true,
+        "constraintViolation": false
+      },
+      "winner": "A",
+      "reason": "候选2额外提出响应头回传，非题目所需；候选1更聚焦生成、绑定和传播requestId。"
+    },
+    {
+      "id": "developer-08",
+      "mode": "developer",
+      "taskType": "operations",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均在成功备份后按既有命名清理历史文件，保留7个并显式保护当天文件与失败即退出语义。"
+    },
+    {
+      "id": "developer-09",
+      "mode": "developer",
+      "taskType": "testing",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均复用vi.stubGlobal模拟409，断言冲突提示和对话框保留，未改组件或使用真实网络。"
+    },
+    {
+      "id": "developer-10",
+      "mode": "developer",
+      "taskType": "code-change",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均给出可空timestamptz迁移、参数化成功登录更新、失败不更新、回滚和关键测试点。"
+    },
+    {
+      "id": "specification-01",
+      "mode": "specification",
+      "taskType": "specification",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 3,
+        "clarityExecutability": 3,
+        "constraintAdherence": 3,
+        "restraint": 3,
+        "success": false,
+        "unsupportedAssumption": true,
+        "scopeExpansion": true,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 3,
+        "fidelity": 3,
+        "clarityExecutability": 2,
+        "constraintAdherence": 3,
+        "restraint": 4,
+        "success": false,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "A",
+      "reason": "候选2覆盖面较广；但两者均过于概略，候选2还把异步执行和30天保留作为假设外的范围设计。"
+    },
+    {
+      "id": "specification-02",
+      "mode": "specification",
+      "taskType": "specification",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 5,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 4,
+        "fidelity": 5,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均覆盖重付状态、幂等、回调验签、安全、交互、监控测试和上线，并将指定未知项置于默认假设。"
+    },
+    {
+      "id": "specification-03",
+      "mode": "specification",
+      "taskType": "specification",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 4,
+        "clarityExecutability": 4,
+        "constraintAdherence": 4,
+        "restraint": 4,
+        "success": true,
+        "unsupportedAssumption": true,
+        "scopeExpansion": true,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "B",
+      "reason": "候选1在正文擅定UTC，并在默认项给出UTC每日一次默认；候选2将所有指定未知项明确为可配置待确认。"
+    },
+    {
+      "id": "specification-04",
+      "mode": "specification",
+      "taskType": "specification",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 4,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "B",
+      "reason": "两者均正确隔离未知默认项；候选2对字段、分页、导出、前端状态和回滚的规格更具体完整。"
+    },
+    {
+      "id": "specification-05",
+      "mode": "specification",
+      "taskType": "specification",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 5,
+        "clarityExecutability": 3,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": false,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 4,
+        "fidelity": 3,
+        "clarityExecutability": 5,
+        "constraintAdherence": 3,
+        "restraint": 3,
+        "success": false,
+        "unsupportedAssumption": true,
+        "scopeExpansion": true,
+        "constraintViolation": true
+      },
+      "winner": "A",
+      "reason": "候选1将格式、尺寸、存储商和保留期写成既定默认值，违反必须明确标记未知项；候选2正确标记但规格较简略。"
+    },
+    {
+      "id": "specification-06",
+      "mode": "specification",
+      "taskType": "data-migration",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 5,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "B",
+      "reason": "均标注未知项和高风险；候选1对上线窗口、可观测性、冲突与回滚边界覆盖更完整。"
+    },
+    {
+      "id": "specification-07",
+      "mode": "specification",
+      "taskType": "operations",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 5,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "B",
+      "reason": "均正确隔离四项未知默认；候选2补足明确角色、状态机、通知相关审计和执行器边界。"
+    },
+    {
+      "id": "specification-08",
+      "mode": "specification",
+      "taskType": "specification",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 5,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "B",
+      "reason": "两者均处理权限、隐私与未知默认项；候选1更完整覆盖刷新、查询限制、图表交互、可访问性和链接状态。"
+    },
+    {
+      "id": "specification-09",
+      "mode": "specification",
+      "taskType": "specification",
+      "A": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "tie",
+      "reason": "均完整说明差异套餐、原子计数、响应头、管理权限、监控测试、迁移回滚，并隔离四类未知项。"
+    },
+    {
+      "id": "specification-10",
+      "mode": "specification",
+      "taskType": "specification",
+      "A": {
+        "taskSuccess": 4,
+        "fidelity": 5,
+        "clarityExecutability": 4,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "B": {
+        "taskSuccess": 5,
+        "fidelity": 5,
+        "clarityExecutability": 5,
+        "constraintAdherence": 5,
+        "restraint": 5,
+        "success": true,
+        "unsupportedAssumption": false,
+        "scopeExpansion": false,
+        "constraintViolation": false
+      },
+      "winner": "B",
+      "reason": "两者均不假定自动改码并隔离未知项；候选1对严重性、忽略有效期、审计、通知和失败降级更可执行。"
+    }
+  ],
+  "overall": {
+    "cases": 30,
+    "arms": {
+      "A": {
+        "scores": {
+          "taskSuccess": {
+            "mean": 4.7,
+            "median": 5
+          },
+          "fidelity": {
+            "mean": 4.867,
+            "median": 5
+          },
+          "clarityExecutability": {
+            "mean": 4.6,
+            "median": 5
+          },
+          "constraintAdherence": {
+            "mean": 4.9,
+            "median": 5
+          },
+          "restraint": {
+            "mean": 4.867,
+            "median": 5
+          }
+        },
+        "flags": {
+          "success": {
+            "count": 28,
+            "rate": 0.933
+          },
+          "unsupportedAssumption": {
+            "count": 2,
+            "rate": 0.067
+          },
+          "scopeExpansion": {
+            "count": 3,
+            "rate": 0.1
+          },
+          "constraintViolation": {
+            "count": 0,
+            "rate": 0
+          }
+        }
+      },
+      "B": {
+        "scores": {
+          "taskSuccess": {
+            "mean": 4.8,
+            "median": 5
+          },
+          "fidelity": {
+            "mean": 4.767,
+            "median": 5
+          },
+          "clarityExecutability": {
+            "mean": 4.8,
+            "median": 5
+          },
+          "constraintAdherence": {
+            "mean": 4.8,
+            "median": 5
+          },
+          "restraint": {
+            "mean": 4.733,
+            "median": 5
+          }
+        },
+        "flags": {
+          "success": {
+            "count": 28,
+            "rate": 0.933
+          },
+          "unsupportedAssumption": {
+            "count": 3,
+            "rate": 0.1
+          },
+          "scopeExpansion": {
+            "count": 4,
+            "rate": 0.133
+          },
+          "constraintViolation": {
+            "count": 1,
+            "rate": 0.033
+          }
+        }
+      }
+    },
+    "wins": {
+      "A": 6,
+      "B": 8,
+      "tie": 16
+    }
+  },
+  "byMode": {
+    "faithful": {
+      "cases": 10,
+      "arms": {
+        "A": {
+          "scores": {
+            "taskSuccess": {
+              "mean": 5,
+              "median": 5
+            },
+            "fidelity": {
+              "mean": 5,
+              "median": 5
+            },
+            "clarityExecutability": {
+              "mean": 4.9,
+              "median": 5
+            },
+            "constraintAdherence": {
+              "mean": 5,
+              "median": 5
+            },
+            "restraint": {
+              "mean": 5,
+              "median": 5
+            }
+          },
+          "flags": {
+            "success": {
+              "count": 10,
+              "rate": 1
+            },
+            "unsupportedAssumption": {
+              "count": 0,
+              "rate": 0
+            },
+            "scopeExpansion": {
+              "count": 0,
+              "rate": 0
+            },
+            "constraintViolation": {
+              "count": 0,
+              "rate": 0
+            }
+          }
+        },
+        "B": {
+          "scores": {
+            "taskSuccess": {
+              "mean": 4.9,
+              "median": 5
+            },
+            "fidelity": {
+              "mean": 4.8,
+              "median": 5
+            },
+            "clarityExecutability": {
+              "mean": 4.9,
+              "median": 5
+            },
+            "constraintAdherence": {
+              "mean": 4.8,
+              "median": 5
+            },
+            "restraint": {
+              "mean": 4.8,
+              "median": 5
+            }
+          },
+          "flags": {
+            "success": {
+              "count": 10,
+              "rate": 1
+            },
+            "unsupportedAssumption": {
+              "count": 1,
+              "rate": 0.1
+            },
+            "scopeExpansion": {
+              "count": 1,
+              "rate": 0.1
+            },
+            "constraintViolation": {
+              "count": 0,
+              "rate": 0
+            }
+          }
+        }
+      },
+      "wins": {
+        "A": 1,
+        "B": 1,
+        "tie": 8
+      }
+    },
+    "developer": {
+      "cases": 10,
+      "arms": {
+        "A": {
+          "scores": {
+            "taskSuccess": {
+              "mean": 5,
+              "median": 5
+            },
+            "fidelity": {
+              "mean": 5,
+              "median": 5
+            },
+            "clarityExecutability": {
+              "mean": 5,
+              "median": 5
+            },
+            "constraintAdherence": {
+              "mean": 5,
+              "median": 5
+            },
+            "restraint": {
+              "mean": 4.9,
+              "median": 5
+            }
+          },
+          "flags": {
+            "success": {
+              "count": 10,
+              "rate": 1
+            },
+            "unsupportedAssumption": {
+              "count": 0,
+              "rate": 0
+            },
+            "scopeExpansion": {
+              "count": 1,
+              "rate": 0.1
+            },
+            "constraintViolation": {
+              "count": 0,
+              "rate": 0
+            }
+          }
+        },
+        "B": {
+          "scores": {
+            "taskSuccess": {
+              "mean": 4.9,
+              "median": 5
+            },
+            "fidelity": {
+              "mean": 4.9,
+              "median": 5
+            },
+            "clarityExecutability": {
+              "mean": 4.9,
+              "median": 5
+            },
+            "constraintAdherence": {
+              "mean": 5,
+              "median": 5
+            },
+            "restraint": {
+              "mean": 4.7,
+              "median": 5
+            }
+          },
+          "flags": {
+            "success": {
+              "count": 10,
+              "rate": 1
+            },
+            "unsupportedAssumption": {
+              "count": 1,
+              "rate": 0.1
+            },
+            "scopeExpansion": {
+              "count": 2,
+              "rate": 0.2
+            },
+            "constraintViolation": {
+              "count": 0,
+              "rate": 0
+            }
+          }
+        }
+      },
+      "wins": {
+        "A": 3,
+        "B": 1,
+        "tie": 6
+      }
+    },
+    "specification": {
+      "cases": 10,
+      "arms": {
+        "A": {
+          "scores": {
+            "taskSuccess": {
+              "mean": 4.1,
+              "median": 4
+            },
+            "fidelity": {
+              "mean": 4.6,
+              "median": 5
+            },
+            "clarityExecutability": {
+              "mean": 3.9,
+              "median": 4
+            },
+            "constraintAdherence": {
+              "mean": 4.7,
+              "median": 5
+            },
+            "restraint": {
+              "mean": 4.7,
+              "median": 5
+            }
+          },
+          "flags": {
+            "success": {
+              "count": 8,
+              "rate": 0.8
+            },
+            "unsupportedAssumption": {
+              "count": 2,
+              "rate": 0.2
+            },
+            "scopeExpansion": {
+              "count": 2,
+              "rate": 0.2
+            },
+            "constraintViolation": {
+              "count": 0,
+              "rate": 0
+            }
+          }
+        },
+        "B": {
+          "scores": {
+            "taskSuccess": {
+              "mean": 4.6,
+              "median": 5
+            },
+            "fidelity": {
+              "mean": 4.6,
+              "median": 5
+            },
+            "clarityExecutability": {
+              "mean": 4.6,
+              "median": 5
+            },
+            "constraintAdherence": {
+              "mean": 4.6,
+              "median": 5
+            },
+            "restraint": {
+              "mean": 4.7,
+              "median": 5
+            }
+          },
+          "flags": {
+            "success": {
+              "count": 8,
+              "rate": 0.8
+            },
+            "unsupportedAssumption": {
+              "count": 1,
+              "rate": 0.1
+            },
+            "scopeExpansion": {
+              "count": 1,
+              "rate": 0.1
+            },
+            "constraintViolation": {
+              "count": 1,
+              "rate": 0.1
+            }
+          }
+        }
+      },
+      "wins": {
+        "A": 2,
+        "B": 6,
+        "tie": 2
+      }
+    }
+  }
+}
