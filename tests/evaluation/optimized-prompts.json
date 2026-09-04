@@ -1,0 +1,184 @@
+{
+  "items": [
+    {
+      "id": "faithful-01",
+      "mode": "faithful",
+      "originalPrompt": "请修复 src/auth/token.js 中 refreshToken 在 refresh_token 缺失时抛出 TypeError 的问题。已知接口约定是缺失 refresh_token 时返回 401 JSON 错误。只修改该文件，不改变成功路径响应结构，不新增依赖，也不要重构其他认证逻辑。",
+      "optimizedPrompt": "请修复 `src/auth/token.js` 中 `refreshToken` 在 `refresh_token` 缺失时抛出 `TypeError` 的问题。\n\n要求：\n- 缺失 `refresh_token` 时，按既有接口约定返回 401 JSON 错误。\n- 仅修改 `src/auth/token.js`。\n- 不改变成功路径的响应结构。\n- 不新增依赖。\n- 不重构其他认证逻辑。"
+    },
+    {
+      "id": "faithful-02",
+      "mode": "faithful",
+      "originalPrompt": "排查 worker 日志中“queue job timed out after 30000ms”。先根据现有 logs/worker.log 和 config/worker.yml 给出最可能原因及验证步骤；不要修改配置、不要重启服务、不要假设 Redis 或网络一定故障。",
+      "optimizedPrompt": "排查 worker 日志中的 `queue job timed out after 30000ms`。\n\n请仅根据现有 `logs/worker.log` 和 `config/worker.yml`：\n- 给出最可能的原因。\n- 给出验证步骤。\n\n限制：\n- 不修改配置。\n- 不重启服务。\n- 不假设 Redis 或网络一定故障。"
+    },
+    {
+      "id": "faithful-03",
+      "mode": "faithful",
+      "originalPrompt": "为 README.md 增加“本地开发”章节，说明 npm install、npm run check 和如何加载本地插件。保持现有中文写作风格，不改动安装章节，不添加未验证的命令或截图。",
+      "optimizedPrompt": "为 `README.md` 增加“本地开发”章节，说明以下内容：\n- `npm install`。\n- `npm run check`。\n- 如何加载本地插件。\n\n要求：\n- 保持现有中文写作风格。\n- 不改动安装章节。\n- 不添加未验证的命令或截图。"
+    },
+    {
+      "id": "faithful-04",
+      "mode": "faithful",
+      "originalPrompt": "读取 data/orders.csv，计算 2025-01-01 至 2025-01-31 每个 region 的已支付订单数和金额总和。仅统计 status=paid 的记录，金额使用 amount 列，不修正源数据，不推断缺失 region 的归属，结果用 Markdown 表格输出。",
+      "optimizedPrompt": "读取 `data/orders.csv`，计算 2025-01-01 至 2025-01-31 期间每个 `region` 的已支付订单数和金额总和。\n\n要求：\n- 仅统计 `status=paid` 的记录。\n- 金额使用 `amount` 列。\n- 不修正源数据。\n- 不推断缺失 `region` 的归属。\n- 使用 Markdown 表格输出结果。"
+    },
+    {
+      "id": "faithful-05",
+      "mode": "faithful",
+      "originalPrompt": "为 deploy/restart-web.ps1 添加一次端口 3080 可用性检查：重启命令执行后最多等待 30 秒，每秒检查一次；超时只返回非零退出码和清晰错误信息。不要杀死其他进程，不要更改服务启动命令，不要加入管理员权限要求。",
+      "optimizedPrompt": "为 `deploy/restart-web.ps1` 添加端口 3080 可用性检查。\n\n要求：\n- 在重启命令执行后开始检查。\n- 最多等待 30 秒。\n- 每秒检查一次。\n- 超时时仅返回非零退出码和清晰错误信息。\n- 不杀死其他进程。\n- 不更改服务启动命令。\n- 不加入管理员权限要求。"
+    },
+    {
+      "id": "faithful-06",
+      "mode": "faithful",
+      "originalPrompt": "给 parseUserConfig 函数补充测试，覆盖空对象、缺少 timeout、timeout 为字符串“5000”、timeout 小于 1000 四种情况。沿用现有 Node test 风格，只添加测试文件或测试用例，不改生产代码，也不要改变当前默认值。",
+      "optimizedPrompt": "为 `parseUserConfig` 函数补充测试，覆盖以下四种情况：\n1. 空对象。\n2. 缺少 `timeout`。\n3. `timeout` 为字符串 `\"5000\"`。\n4. `timeout` 小于 1000。\n\n要求：\n- 沿用现有 Node test 风格。\n- 仅添加测试文件或测试用例。\n- 不修改生产代码。\n- 不改变当前默认值。"
+    },
+    {
+      "id": "faithful-07",
+      "mode": "faithful",
+      "originalPrompt": "把 API 响应中的 errorMessage 字段改名为 message，仅处理 POST /api/import 的失败响应。客户端尚未迁移，因此请同时保留 errorMessage 作为兼容字段；不要修改其他路由，不改变 HTTP 状态码。",
+      "optimizedPrompt": "调整 API 响应字段：将 `errorMessage` 改名为 `message`，但仅处理 `POST /api/import` 的失败响应。\n\n要求：\n- 同时保留 `errorMessage` 作为兼容字段，因为客户端尚未迁移。\n- 不修改其他路由。\n- 不改变 HTTP 状态码。"
+    },
+    {
+      "id": "faithful-08",
+      "mode": "faithful",
+      "originalPrompt": "分析 tests/api.test.cjs 中间歇性失败的“expected 2 calls, got 3”。请指出可能共享状态的位置，并给出最小修复建议。不要直接删除断言，不要提高测试超时，不要声称已经复现，除非日志或代码明确证明。",
+      "optimizedPrompt": "分析 `tests/api.test.cjs` 中间歇性失败的 `expected 2 calls, got 3`。\n\n请：\n- 指出可能存在共享状态的位置。\n- 给出最小修复建议。\n\n限制：\n- 不直接删除断言。\n- 不提高测试超时。\n- 除非日志或代码明确证明，否则不要声称已经复现。"
+    },
+    {
+      "id": "faithful-09",
+      "mode": "faithful",
+      "originalPrompt": "编写一份面向值班人员的 runbook，说明当 /health 返回 503 时如何收集信息并升级。内容只包含查看应用日志、确认依赖健康状态、记录时间窗口和联系 on-call；不要写自动修复、不要暴露密钥、不要假设 Kubernetes 环境。",
+      "optimizedPrompt": "编写一份面向值班人员的 runbook，说明当 `/health` 返回 503 时如何收集信息并升级。\n\n内容仅包含：\n- 查看应用日志。\n- 确认依赖健康状态。\n- 记录时间窗口。\n- 联系 on-call。\n\n限制：\n- 不写自动修复。\n- 不暴露密钥。\n- 不假设 Kubernetes 环境。"
+    },
+    {
+      "id": "faithful-10",
+      "mode": "faithful",
+      "originalPrompt": "在现有 SQLite 查询中增加 created_at 从 2024-10-01 到 2024-12-31 的过滤，并保留原有 user_id 过滤和排序。不要创建索引，不要迁移数据库，不要修改日期边界为滚动窗口。",
+      "optimizedPrompt": "在现有 SQLite 查询中增加 `created_at` 从 2024-10-01 到 2024-12-31 的过滤。\n\n要求：\n- 保留现有 `user_id` 过滤。\n- 保留现有排序。\n- 不创建索引。\n- 不迁移数据库。\n- 不将日期边界改为滚动窗口。"
+    },
+    {
+      "id": "developer-01",
+      "mode": "developer",
+      "originalPrompt": "现有服务是 Node.js CommonJS，HTTP 层使用 Express，测试使用 node:test。请为 GET /api/projects 增加可选的 limit 查询参数，默认 20，允许 1 到 100 的整数，非法值返回 400 JSON。数据库访问层已有 listProjects(limit) 可用。只修改路由与对应测试，不新增框架、ORM 或校验库，也不要改变其他接口。",
+      "optimizedPrompt": "为 `GET /api/projects` 增加可选的 `limit` 查询参数。\n\n现有环境：\n- 服务使用 Node.js CommonJS。\n- HTTP 层使用 Express。\n- 测试使用 `node:test`。\n- 数据库访问层已有 `listProjects(limit)` 可用。\n\n输入与行为：\n- `limit` 默认值为 20。\n- 仅允许 1 到 100 的整数。\n- 非法值返回 400 JSON。\n\n范围与限制：\n- 仅修改路由及其对应测试。\n- 不新增框架、ORM 或校验库。\n- 不改变其他接口。\n\n验证：\n- 使用现有 `node:test` 风格覆盖有效、默认和非法 `limit` 行为。"
+    },
+    {
+      "id": "developer-02",
+      "mode": "developer",
+      "originalPrompt": "项目当前通过 pnpm workspace 管理 packages/api 和 packages/web，CI 已执行 pnpm -r test。请定位 packages/api 在 Windows CI 上偶发 EBUSY 的清理失败，并提出最小修复。已有临时目录工具是 packages/api/src/tmp.js。不要替换包管理器，不要关闭 Windows CI，不要把重试次数设为无限，也不要修改 web 包。",
+      "optimizedPrompt": "定位并修复 `packages/api` 在 Windows CI 上偶发的 `EBUSY` 清理失败。\n\n现有环境：\n- 项目通过 pnpm workspace 管理 `packages/api` 和 `packages/web`。\n- CI 已执行 `pnpm -r test`。\n- 现有临时目录工具为 `packages/api/src/tmp.js`。\n\n目标：\n- 定位导致清理失败的原因。\n- 提出最小修复。\n\n范围与限制：\n- 范围仅限 `packages/api`。\n- 不替换包管理器。\n- 不关闭 Windows CI。\n- 不将重试次数设为无限。\n- 不修改 `packages/web`。\n\n验证：\n- 使用现有 CI 与测试流程验证修复。"
+    },
+    {
+      "id": "developer-03",
+      "mode": "developer",
+      "originalPrompt": "仓库文档使用 Markdown，命令示例采用 PowerShell，发布流程由 .github/workflows/release.yml 触发。请补充 RELEASE.md，解释如何创建带 tarball 的 GitHub Release、如何核对 SHA-256 digest、以及失败时不要覆盖既有 Release。不要发明 npm registry 发布步骤，不要编辑 workflow 文件，不要写入真实 token。",
+      "optimizedPrompt": "补充 `RELEASE.md`，说明发布流程。\n\n现有约定：\n- 仓库文档使用 Markdown。\n- 命令示例采用 PowerShell。\n- 发布流程由 `.github/workflows/release.yml` 触发。\n\n文档应说明：\n- 如何创建带 tarball 的 GitHub Release。\n- 如何核对 SHA-256 digest。\n- 失败时不要覆盖既有 Release。\n\n限制：\n- 不发明 npm registry 发布步骤。\n- 不编辑 workflow 文件。\n- 不写入真实 token。"
+    },
+    {
+      "id": "developer-04",
+      "mode": "developer",
+      "originalPrompt": "数据管道使用 Python 3.11 和 pandas，输入为 data/events.parquet，输出必须是 reports/daily.csv。请按 UTC 日期统计 event_type 的数量，并排除 is_test=true。现有脚本为 scripts/report.py，不能改变输出列名 date、event_type、count；不要引入 Spark、数据库或第三方服务，也不要删除原始 parquet 文件。",
+      "optimizedPrompt": "更新 `scripts/report.py`，按 UTC 日期统计 `event_type` 的数量。\n\n现有环境：\n- 使用 Python 3.11 和 pandas。\n- 输入文件为 `data/events.parquet`。\n- 输出文件必须为 `reports/daily.csv`。\n\n处理要求：\n- 排除 `is_test=true` 的记录。\n- 输出列名必须保持为 `date`、`event_type`、`count`。\n\n范围与限制：\n- 仅修改 `scripts/report.py`。\n- 不引入 Spark、数据库或第三方服务。\n- 不删除原始 parquet 文件。\n\n验证：\n- 验证输出写入 `reports/daily.csv` 且列名保持不变。"
+    },
+    {
+      "id": "developer-05",
+      "mode": "developer",
+      "originalPrompt": "部署环境是 Windows Server，服务由 node lib/bin.js web 启动，健康检查端口固定 3080。请为 scripts/check-web.ps1 增加检查：若端口不可连接则输出诊断文本并返回 1；若可连接则返回 0。不要停止或启动服务，不要使用管理员命令，不要改端口，也不要引入计划任务。",
+      "optimizedPrompt": "为 `scripts/check-web.ps1` 增加 Web 健康检查。\n\n现有环境：\n- 部署环境为 Windows Server。\n- 服务由 `node lib/bin.js web` 启动。\n- 健康检查端口固定为 3080。\n\n行为：\n- 端口不可连接时，输出诊断文本并返回 1。\n- 端口可连接时，返回 0。\n\n限制：\n- 不停止或启动服务。\n- 不使用管理员命令。\n- 不改端口。\n- 不引入计划任务。"
+    },
+    {
+      "id": "developer-06",
+      "mode": "developer",
+      "originalPrompt": "前端是 React.createElement 写法，没有 JSX，构建脚本把 src/client/app.js 复制为 lib/client.cjs。请给 settings 中的“检测版本”按钮增加禁用态，避免请求进行中重复点击。测试为 Node 静态 bundle smoke test，不使用 Playwright。不要引入 React 状态管理库，不要改 Host RPC 协议，不要添加浏览器端网络请求。",
+      "optimizedPrompt": "为 settings 中的“检测版本”按钮增加禁用态，避免请求进行中重复点击。\n\n现有环境：\n- 前端使用 `React.createElement`，不使用 JSX。\n- 构建脚本将 `src/client/app.js` 复制为 `lib/client.cjs`。\n- 测试为 Node 静态 bundle smoke test，不使用 Playwright。\n\n实现范围：\n- 在请求进行中禁用“检测版本”按钮。\n\n限制：\n- 不引入 React 状态管理库。\n- 不改 Host RPC 协议。\n- 不添加浏览器端网络请求。\n\n验证：\n- 使用 Node 静态 bundle smoke test 覆盖生成产物。"
+    },
+    {
+      "id": "developer-07",
+      "mode": "developer",
+      "originalPrompt": "后端日志使用 pino，配置通过环境变量 LOG_LEVEL 控制，当前默认 info。请调查生产日志缺少 requestId 的原因，并给出代码级最小补充方案。不要切换日志库，不要把默认级别改为 debug，不要在日志中记录 Authorization 头或请求体。",
+      "optimizedPrompt": "调查生产日志缺少 `requestId` 的原因，并给出代码级最小补充方案。\n\n现有环境：\n- 后端日志使用 pino。\n- 配置通过环境变量 `LOG_LEVEL` 控制。\n- 当前默认级别为 `info`。\n\n限制：\n- 不切换日志库。\n- 不将默认级别改为 `debug`。\n- 不在日志中记录 `Authorization` 头或请求体。\n\n输出：\n- 说明调查到的原因。\n- 给出最小代码级补充方案。"
+    },
+    {
+      "id": "developer-08",
+      "mode": "developer",
+      "originalPrompt": "现有 Bash 运维脚本位于 ops/backup.sh，目标服务器已提供 pg_dump 和 gzip，备份目录由 BACKUP_DIR 环境变量提供。请增加保留最近 7 个备份文件的清理步骤，并保留当前失败即退出行为。不要引入 cron、云存储或新的命令行工具，不要删除当天生成的备份。",
+      "optimizedPrompt": "更新 `ops/backup.sh`，增加保留最近 7 个备份文件的清理步骤。\n\n现有环境：\n- 目标服务器已提供 `pg_dump` 和 `gzip`。\n- 备份目录由 `BACKUP_DIR` 环境变量提供。\n- 脚本当前采用失败即退出行为。\n\n要求：\n- 保留当前失败即退出行为。\n- 不删除当天生成的备份。\n\n限制：\n- 不引入 cron。\n- 不引入云存储。\n- 不引入新的命令行工具。"
+    },
+    {
+      "id": "developer-09",
+      "mode": "developer",
+      "originalPrompt": "测试套件使用 Vitest，组件已有 tests/Button.test.tsx，fetch 已由 vi.stubGlobal 模拟。请为保存按钮增加“服务返回 409 时显示冲突提示且不关闭对话框”的测试。不要改组件实现，不要使用真实网络，不要修改全局测试配置。",
+      "optimizedPrompt": "为保存按钮增加测试，覆盖服务返回 409 时显示冲突提示且不关闭对话框。\n\n现有环境：\n- 测试套件使用 Vitest。\n- 组件已有 `tests/Button.test.tsx`。\n- `fetch` 已由 `vi.stubGlobal` 模拟。\n\n限制：\n- 不修改组件实现。\n- 不使用真实网络。\n- 不修改全局测试配置。"
+    },
+    {
+      "id": "developer-10",
+      "mode": "developer",
+      "originalPrompt": "当前 API 用 PostgreSQL，迁移文件放在 db/migrations，查询层使用参数化 SQL。请为 users 表增加 last_seen_at 可空 timestamptz 列，并在用户成功登录后更新该列。请同时提供迁移回滚方案和测试点。不要替换数据库、ORM 或查询层，不要把该字段设为非空，不要记录登录失败时间。",
+      "optimizedPrompt": "为 `users` 表增加 `last_seen_at` 可空 `timestamptz` 列，并在用户成功登录后更新该列。\n\n现有环境：\n- API 使用 PostgreSQL。\n- 迁移文件位于 `db/migrations`。\n- 查询层使用参数化 SQL。\n\n交付内容：\n- 迁移方案。\n- 用户成功登录后的更新逻辑。\n- 迁移回滚方案。\n- 测试点。\n\n限制：\n- 不替换数据库、ORM 或查询层。\n- 不将该字段设为非空。\n- 不记录登录失败时间。"
+    },
+    {
+      "id": "specification-01",
+      "mode": "specification",
+      "originalPrompt": "为一个团队内部的“批量导入客户 CSV”功能编写完整开发规格。用户可上传 CSV，系统需要校验列、显示错误并在成功后写入客户数据。请覆盖目标、范围、用户流程、字段规则、API、数据模型、错误处理、权限、测试、发布与回滚。所有原提示词未提供的选择必须在 `## Default assumptions` 下逐项明确标记；不要把假设伪装成既定事实。",
+      "optimizedPrompt": "为团队内部的“批量导入客户 CSV”功能编写完整开发规格。\n\n已知需求：\n- 用户可上传 CSV。\n- 系统需要校验列。\n- 系统需要显示错误。\n- 成功后写入客户数据。\n\n规格必须覆盖：\n- 目标。\n- 范围。\n- 用户流程。\n- 字段规则。\n- API。\n- 数据模型。\n- 错误处理。\n- 权限。\n- 测试。\n- 发布与回滚。\n\n将原请求与新增默认项分开。所有原提示词未提供但为完整规格所必需的选择，必须逐项放在文末的 `## Default assumptions` 标题下明确标记；不要将假设表述为既定事实。"
+    },
+    {
+      "id": "specification-02",
+      "mode": "specification",
+      "originalPrompt": "为“订单支付失败后允许客户重新支付”的能力编写完整规格。需要说明状态流转、重复请求处理、支付回调、安全边界、前后端交互、监控、测试和上线策略。所有未说明的支付渠道、超时、幂等键、权限和通知策略必须写入 `## Default assumptions`；不要声明已存在任何第三方支付 SDK。",
+      "optimizedPrompt": "为“订单支付失败后允许客户重新支付”的能力编写完整规格。\n\n规格必须说明：\n- 状态流转。\n- 重复请求处理。\n- 支付回调。\n- 安全边界。\n- 前后端交互。\n- 监控。\n- 测试。\n- 上线策略。\n\n将原请求与新增默认项分开。未说明但为完整规格所必需的支付渠道、超时、幂等键、权限和通知策略，必须逐项写在文末的 `## Default assumptions` 标题下。不要声明已存在任何第三方支付 SDK。"
+    },
+    {
+      "id": "specification-03",
+      "mode": "specification",
+      "originalPrompt": "为“每天生成运营指标邮件”编写完整规格。指标包括新增用户、付费订单和退款金额，收件人是运营团队。请定义数据口径、时区、失败重试、邮件模板、权限、审计、测试和运维告警。所有未给出的数据源、发送服务、运行时间和保留期限必须放在 `## Default assumptions`，并明确它们可配置。",
+      "optimizedPrompt": "为“每天生成运营指标邮件”编写完整规格。\n\n已知需求：\n- 指标包括新增用户、付费订单和退款金额。\n- 收件人为运营团队。\n\n规格必须定义：\n- 数据口径。\n- 时区。\n- 失败重试。\n- 邮件模板。\n- 权限。\n- 审计。\n- 测试。\n- 运维告警。\n\n将原请求与新增默认项分开。未给出但为完整规格所必需的数据源、发送服务、运行时间和保留期限，必须逐项放在文末的 `## Default assumptions` 标题下，并明确它们可配置。"
+    },
+    {
+      "id": "specification-04",
+      "mode": "specification",
+      "originalPrompt": "为“管理员查看并导出审计日志”编写完整开发规格。日志应支持按时间、操作者和动作筛选，并导出 CSV。请说明数据字段、分页、查询性能、访问控制、脱敏、导出限制、API、前端状态、测试和回滚。所有未给出的日志保留期、最大导出行数、角色名称和存储方案必须在 `## Default assumptions` 标记。",
+      "optimizedPrompt": "为“管理员查看并导出审计日志”编写完整开发规格。\n\n已知需求：\n- 日志支持按时间、操作者和动作筛选。\n- 日志支持导出 CSV。\n\n规格必须说明：\n- 数据字段。\n- 分页。\n- 查询性能。\n- 访问控制。\n- 脱敏。\n- 导出限制。\n- API。\n- 前端状态。\n- 测试。\n- 回滚。\n\n将原请求与新增默认项分开。未给出但为完整规格所必需的日志保留期、最大导出行数、角色名称和存储方案，必须逐项在文末的 `## Default assumptions` 标题下标记。"
+    },
+    {
+      "id": "specification-05",
+      "mode": "specification",
+      "originalPrompt": "为“上传图片后生成多尺寸缩略图”编写完整规格。用户上传图片后需要查看处理进度并获得原图和缩略图地址。请覆盖文件限制、处理队列、失败恢复、存储、缓存、安全、API、前端、测试、监控和成本边界。所有未说明的图片格式、尺寸集合、存储提供商和保留策略必须在 `## Default assumptions` 中明确标记。",
+      "optimizedPrompt": "为“上传图片后生成多尺寸缩略图”编写完整规格。\n\n已知需求：\n- 用户上传图片后可查看处理进度。\n- 用户可获得原图和缩略图地址。\n\n规格必须覆盖：\n- 文件限制。\n- 处理队列。\n- 失败恢复。\n- 存储。\n- 缓存。\n- 安全。\n- API。\n- 前端。\n- 测试。\n- 监控。\n- 成本边界。\n\n将原请求与新增默认项分开。未说明但为完整规格所必需的图片格式、尺寸集合、存储提供商和保留策略，必须逐项在文末的 `## Default assumptions` 标题下明确标记。"
+    },
+    {
+      "id": "specification-06",
+      "mode": "specification",
+      "originalPrompt": "为“将旧系统用户数据迁移到新账户服务”编写完整迁移规格。需要涵盖字段映射、唯一性冲突、密码处理、分批执行、可观测性、验证、回滚、数据保护和上线窗口。所有未说明的旧库类型、新服务接口、密码算法和批次大小必须写在 `## Default assumptions`，并将高风险假设单独标出。",
+      "optimizedPrompt": "为“将旧系统用户数据迁移到新账户服务”编写完整迁移规格。\n\n规格必须涵盖：\n- 字段映射。\n- 唯一性冲突。\n- 密码处理。\n- 分批执行。\n- 可观测性。\n- 验证。\n- 回滚。\n- 数据保护。\n- 上线窗口。\n\n将原请求与新增默认项分开。未说明但为完整规格所必需的旧库类型、新服务接口、密码算法和批次大小，必须逐项写在文末的 `## Default assumptions` 标题下；高风险假设必须单独标出。"
+    },
+    {
+      "id": "specification-07",
+      "mode": "specification",
+      "originalPrompt": "为“生产环境配置变更审批与发布”编写完整运维规格。需要支持提交变更、双人审批、定时发布、失败停止、审计记录和紧急变更。请定义流程、角色、状态、权限、通知、执行器边界、健康检查、回滚、测试与安全要求。所有未说明的审批时限、通知渠道、执行环境和紧急授权条件必须在 `## Default assumptions` 中标记。",
+      "optimizedPrompt": "为“生产环境配置变更审批与发布”编写完整运维规格。\n\n需要支持：\n- 提交变更。\n- 双人审批。\n- 定时发布。\n- 失败停止。\n- 审计记录。\n- 紧急变更。\n\n规格必须定义：\n- 流程。\n- 角色。\n- 状态。\n- 权限。\n- 通知。\n- 执行器边界。\n- 健康检查。\n- 回滚。\n- 测试。\n- 安全要求。\n\n将原请求与新增默认项分开。未说明但为完整规格所必需的审批时限、通知渠道、执行环境和紧急授权条件，必须逐项在文末的 `## Default assumptions` 标题下标记。"
+    },
+    {
+      "id": "specification-08",
+      "mode": "specification",
+      "originalPrompt": "为“用户可创建并共享只读数据看板”编写完整规格。看板包含图表、筛选器和链接分享。请覆盖用户目标、权限模型、链接失效、数据刷新、查询限制、可访问性、前端交互、API、测试、监控和隐私。所有未说明的图表库、链接有效期、刷新频率和数据源权限规则必须在 `## Default assumptions` 中明确。",
+      "optimizedPrompt": "为“用户可创建并共享只读数据看板”编写完整规格。\n\n已知需求：\n- 看板包含图表、筛选器和链接分享。\n\n规格必须覆盖：\n- 用户目标。\n- 权限模型。\n- 链接失效。\n- 数据刷新。\n- 查询限制。\n- 可访问性。\n- 前端交互。\n- API。\n- 测试。\n- 监控。\n- 隐私。\n\n将原请求与新增默认项分开。未说明但为完整规格所必需的图表库、链接有效期、刷新频率和数据源权限规则，必须逐项在文末的 `## Default assumptions` 标题下明确。"
+    },
+    {
+      "id": "specification-09",
+      "mode": "specification",
+      "originalPrompt": "为“API 限流与配额管理”编写完整规格。不同客户需要不同配额，超限时返回清晰错误，并允许管理员查看使用量。请说明计数策略、并发处理、响应头、套餐配置、管理接口、监控、告警、测试、迁移和回滚。所有未说明的限流算法、时间窗口、存储层和客户标识方式必须写入 `## Default assumptions`。",
+      "optimizedPrompt": "为“API 限流与配额管理”编写完整规格。\n\n已知需求：\n- 不同客户需要不同配额。\n- 超限时返回清晰错误。\n- 管理员可查看使用量。\n\n规格必须说明：\n- 计数策略。\n- 并发处理。\n- 响应头。\n- 套餐配置。\n- 管理接口。\n- 监控。\n- 告警。\n- 测试。\n- 迁移。\n- 回滚。\n\n将原请求与新增默认项分开。未说明但为完整规格所必需的限流算法、时间窗口、存储层和客户标识方式，必须逐项写在文末的 `## Default assumptions` 标题下。"
+    },
+    {
+      "id": "specification-10",
+      "mode": "specification",
+      "originalPrompt": "为“代码仓库中的依赖漏洞报告与修复建议”编写完整规格。系统需要扫描依赖清单、展示风险、生成修复建议，并允许忽略带原因的结果。请覆盖输入、扫描频率、漏洞来源、严重性规则、权限、忽略流程、通知、数据保留、测试、发布和失败降级。所有未说明的扫描引擎、漏洞数据库、通知方式和保留期必须在 `## Default assumptions` 中标记，且不要假定可自动修改代码。",
+      "optimizedPrompt": "为“代码仓库中的依赖漏洞报告与修复建议”编写完整规格。\n\n已知需求：\n- 系统扫描依赖清单。\n- 系统展示风险。\n- 系统生成修复建议。\n- 系统允许忽略带原因的结果。\n\n规格必须覆盖：\n- 输入。\n- 扫描频率。\n- 漏洞来源。\n- 严重性规则。\n- 权限。\n- 忽略流程。\n- 通知。\n- 数据保留。\n- 测试。\n- 发布。\n- 失败降级。\n\n将原请求与新增默认项分开。未说明但为完整规格所必需的扫描引擎、漏洞数据库、通知方式和保留期，必须逐项在文末的 `## Default assumptions` 标题下标记。不要假定可自动修改代码。"
+    }
+  ]
+}
