@@ -55,6 +55,10 @@ dsh plugin --profile web add zzy-dsh-prompt-optimizer
 
 Restart the existing DSH Web process and refresh its current URL.
 
-## Evaluation`n`nThe reproducible 30-case blinded A/B protocol, sanitized inputs, and independent evaluation are available in [tests/evaluation/report.md](tests/evaluation/report.md) and [tests/evaluation/conclusion.md](tests/evaluation/conclusion.md).`n`n## License
+## Evaluation
+
+The reproducible 30-case blinded A/B protocol, sanitized inputs, and independent evaluation are available in [tests/evaluation/report.md](tests/evaluation/report.md) and [tests/evaluation/conclusion.md](tests/evaluation/conclusion.md).
+
+## License
 
 MIT
