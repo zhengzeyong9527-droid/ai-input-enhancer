@@ -1,0 +1,36 @@
+{
+  "evaluationDate": "2026-08-19",
+  "pluginVersion": "0.3.0",
+  "datasetCases": 30,
+  "modes": {
+    "faithful": 10,
+    "developer": 10,
+    "specification": 10
+  },
+  "arms": {
+    "A": "Original prompt",
+    "B": "Prompt transformed with the exact repository mode prompt"
+  },
+  "optimizerControls": {
+    "conversationContext": false,
+    "workspaceDocumentContext": false,
+    "continuousOptimization": false,
+    "fallbackRouting": false
+  },
+  "runnerControls": {
+    "agentRoute": "current-session-default",
+    "modelOverride": null,
+    "samplingParametersExposed": false,
+    "matchedExecutionInstructions": true,
+    "freshContextPerCase": true,
+    "toolsDisabledForTaskExecution": true
+  },
+  "evaluationControls": {
+    "testSetGeneratorIndependent": true,
+    "runnersLaunchedConcurrently": true,
+    "blindLabels": ["candidate_1", "candidate_2"],
+    "independentPerCaseEvaluator": true,
+    "independentConclusionEvaluator": true
+  },
+  "scope": "Prompt-equivalent evaluation of mode text; browser-bound plugin RPC was not invoked."
+}
