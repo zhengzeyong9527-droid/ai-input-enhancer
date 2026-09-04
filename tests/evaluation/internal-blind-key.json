@@ -1,0 +1,154 @@
+{
+  "items": [
+    {
+      "id": "faithful-01",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "faithful-02",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "faithful-03",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "faithful-04",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "faithful-05",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "faithful-06",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "faithful-07",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "faithful-08",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "faithful-09",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "faithful-10",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "developer-01",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "developer-02",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "developer-03",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "developer-04",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "developer-05",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "developer-06",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "developer-07",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "developer-08",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "developer-09",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "developer-10",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "specification-01",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "specification-02",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "specification-03",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "specification-04",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "specification-05",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "specification-06",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "specification-07",
+      "candidate_1": "A",
+      "candidate_2": "B"
+    },
+    {
+      "id": "specification-08",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "specification-09",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    },
+    {
+      "id": "specification-10",
+      "candidate_1": "B",
+      "candidate_2": "A"
+    }
+  ]
+}
