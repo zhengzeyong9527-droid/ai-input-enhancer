@@ -57,6 +57,10 @@ dsh plugin --profile web add zzy-dsh-prompt-optimizer
 
 重启现有 DSH Web 进程并刷新当前 URL。
 
-## 评估`n`n可复现的 30 条盲化 A/B 测试协议、脱敏输入和独立评估结果见 [tests/evaluation/report.md](tests/evaluation/report.md) 与 [tests/evaluation/conclusion.md](tests/evaluation/conclusion.md)。`n`n## 许可证
+## 评估
+
+可复现的 30 条盲化 A/B 测试协议、脱敏输入和独立评估结果见 [tests/evaluation/report.md](tests/evaluation/report.md) 与 [tests/evaluation/conclusion.md](tests/evaluation/conclusion.md)。
+
+## 许可证
 
 MIT
